@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkillSwap — Project Details</title>
+
+  <!-- Onest (matches existing vibe; if already loaded globally in your project, keeping this is fine) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* topbar stays sticky */
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 18px 28px; /* edge gutter like your home */
+  background: linear-gradient(to bottom, rgba(159,135,195,0.92), rgba(159,135,195,0.68), rgba(159,135,195,0));
+  backdrop-filter: blur(10px);
+}
+
+/* full-bleed header: no pill container */
+.header.header--full{
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* optional: make the hamburger float subtle like your screenshot */
+.menuBtn{
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(31,27,46,0.14);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+}
+
+/* mobile gutters */
+@media (max-width: 720px){
+  .topbar{ padding: 16px 16px; }
+}
+
+    :root{
+      --bg: #9F87C3;
+      --ink: #1F1B2E;
+
+      --glass: rgba(31,27,46,0.72);
+      --glass-2: rgba(31,27,46,0.62);
+      --stroke: rgba(255,255,255,0.16);
+      --stroke-2: rgba(255,255,255,0.10);
+
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --muted-2: rgba(255,255,255,0.60);
+
+      --shadow: 0 20px 60px rgba(0,0,0,0.18);
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.12);
+
+      --radius-xl: 22px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 12px;
+
+      --pad: 18px;
+      --max: 1080px;
+
+      --focus: rgba(255,255,255,0.92);
+      --focusRing: 0 0 0 3px rgba(255,255,255,0.22), 0 0 0 1px rgba(31,27,46,0.35) inset;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: "Onest", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.35;
+
+      /* Keep scrollbar hidden but scroll works */
+      overflow-y: auto;
+      scrollbar-width: none;              /* Firefox */
+      -ms-overflow-style: none;           /* IE/old Edge */
+    }
+    body::-webkit-scrollbar{ display:none; } /* WebKit */
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 18px 56px;
+    }
+
+    /* ===== Header (keep EXACT same structure you used before if possible) ===== */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding: 14px 0 12px;
+      background: linear-gradient(to bottom, rgba(159,135,195,0.92), rgba(159,135,195,0.68), rgba(159,135,195,0));
+      backdrop-filter: blur(10px);
+    }
+
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+
+      border: 1px solid var(--stroke-2);
+      background: rgba(31,27,46,0.18);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-soft);
+      border-radius: 999px;
+      padding: 10px 12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding-left: 6px;
+      user-select: none;
+    }
+
+    .brandMark{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.14);
+    }
+
+    .brandName{
+      font-weight: 650;
+      letter-spacing: 0.2px;
+      color: rgba(255,255,255,0.94);
+    }
+
+    .menuBtn{
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.92);
+      border-radius: 999px;
+      padding: 10px 12px;
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+    .menuBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.14); }
+    .menuBtn:active{ transform: translateY(0px); }
+    .menuBtn:focus-visible{ outline: none; box-shadow: var(--focusRing); }
+
+    .hamburger{
+      width: 18px; height: 12px; position: relative; display:inline-block;
+    }
+    .hamburger span{
+      position:absolute; left:0; right:0;
+      height: 2px; border-radius: 2px;
+      background: rgba(255,255,255,0.90);
+    }
+    .hamburger span:nth-child(1){ top: 0; }
+    .hamburger span:nth-child(2){ top: 5px; opacity: 0.85; }
+    .hamburger span:nth-child(3){ bottom: 0; opacity: 0.7; }
+
+    /* ===== Menu Overlay (ONE controller, uses [hidden]) ===== */
+    .menuOverlay[hidden]{ display:none; }
+    .menuOverlay{
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(18,14,30,0.52);
+      backdrop-filter: blur(8px);
+      padding: 18px;
+    }
+
+    .menuPanel{
+      max-width: 520px;
+      margin: 10vh auto 0;
+      border-radius: var(--radius-xl);
+      background: rgba(31,27,46,0.80);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .menuHead{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      padding: 14px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+    .menuHead .title{
+      font-weight: 650;
+      letter-spacing: 0.2px;
+    }
+    .iconBtn{
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.92);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 140ms ease, transform 140ms ease;
+    }
+    .iconBtn:hover{ background: rgba(255,255,255,0.12); transform: translateY(-1px); }
+    .iconBtn:active{ transform: translateY(0px); }
+    .iconBtn:focus-visible{ outline:none; box-shadow: var(--focusRing); }
+
+    .menuBody{ padding: 12px; }
+    .menuList{
+      display:grid;
+      gap: 10px;
+    }
+
+    .menuItem{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+    .menuItem:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+    .menuItem .hint{ color: var(--muted-2); font-size: 0.92rem; }
+
+    /* ===== Page layout ===== */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
+      .menuPanel{ margin-top: 8vh; }
+    }
+
+    .card{
+      border-radius: var(--radius-xl);
+      background: var(--glass);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .cardHeader{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .cardHeader .h{
+      font-weight: 650;
+      letter-spacing: 0.2px;
+      margin: 0;
+      font-size: 1.02rem;
+    }
+    .cardBody{ padding: 14px 16px 16px; }
+
+    .muted{ color: var(--muted); }
+    .muted2{ color: var(--muted-2); }
+
+    .pillRow{
+      display:flex;
+      flex-wrap: wrap;
+      align-items:center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.88);
+    }
+    .dot{
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.65);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.10);
+    }
+    .badge[data-status="verified"] .dot{ background: rgba(144, 238, 144, 0.95); }
+    .badge[data-status="in-review"] .dot{ background: rgba(255, 215, 0, 0.95); }
+    .badge[data-status="in-progress"] .dot{ background: rgba(135, 206, 250, 0.95); }
+
+    .actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items:center;
+      justify-content: flex-end;
+    }
+
+    .btn{
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.92);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.14); }
+    .btn:active{ transform: translateY(0px); }
+    .btn:focus-visible{ outline:none; box-shadow: var(--focusRing); }
+    .btn.primary{
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.22);
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .linkBtn{
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.92);
+      padding: 0;
+      cursor: pointer;
+      font: inherit;
+      text-decoration: underline;
+      text-decoration-color: rgba(255,255,255,0.35);
+      text-underline-offset: 3px;
+    }
+    .linkBtn:focus-visible{ outline:none; box-shadow: var(--focusRing); border-radius: 10px; }
+
+    .kvs{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 720px){
+      .kvs{ grid-template-columns: 1fr; }
+    }
+
+    .kv{
+      padding: 12px 12px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .kv .k{ font-size: 0.86rem; color: var(--muted-2); }
+    .kv .v{ margin-top: 6px; font-weight: 600; color: rgba(255,255,255,0.92); }
+    .kv .v small{ font-weight: 500; color: var(--muted); }
+
+    /* Evidence: link cards */
+    .evidenceGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 720px){
+      .evidenceGrid{ grid-template-columns: 1fr; }
+    }
+    .linkCard{
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      padding: 12px 12px;
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 92px;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+    .linkCard:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+    .linkCard .top{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .linkCard .label{
+      font-weight: 650;
+      letter-spacing: 0.2px;
+    }
+    .linkCard .meta{
+      font-size: 0.88rem;
+      color: var(--muted-2);
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.86);
+      word-break: break-word;
+    }
+
+    /* Timeline */
+    .timeline{
+      display:grid;
+      gap: 10px;
+    }
+    .tItem{
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      padding: 12px 12px;
+      display:grid;
+      gap: 6px;
+    }
+    .tTop{
+      display:flex;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .tVer{
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .tDate{
+      font-size: 0.90rem;
+      color: var(--muted-2);
+    }
+    .tChange{
+      color: rgba(255,255,255,0.90);
+    }
+    .tArtifacts{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      font-size: 0.90rem;
+      color: rgba(255,255,255,0.86);
+    }
+    .chip a{ text-decoration: underline; text-decoration-color: rgba(255,255,255,0.28); }
+
+    /* Forms */
+    label{
+      display:block;
+      font-size: 0.90rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, textarea, select{
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.92);
+      padding: 10px 12px;
+      outline: none;
+      transition: box-shadow 140ms ease, border-color 140ms ease, background 140ms ease;
+      font: inherit;
+    }
+    textarea{ resize: vertical; min-height: 90px; }
+    input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.55); }
+    input:focus, textarea:focus, select:focus{
+      box-shadow: var(--focusRing);
+      border-color: rgba(255,255,255,0.24);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .formRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 720px){
+      .formRow{ grid-template-columns: 1fr; }
+    }
+
+    .hr{
+      height: 1px;
+      background: rgba(255,255,255,0.10);
+      margin: 12px 0;
+    }
+
+    /* Activity log */
+    .log{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display:grid;
+      gap: 10px;
+    }
+    .logItem{
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      padding: 12px 12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .logItem .msg{ color: rgba(255,255,255,0.90); }
+    .logItem .ts{ color: var(--muted-2); font-size: 0.90rem; white-space: nowrap; }
+
+    /* Modal (custom, accessible-ish) */
+    .modal[hidden]{ display:none; }
+    .modal{
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(18,14,30,0.56);
+      backdrop-filter: blur(8px);
+      padding: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .modalPanel{
+      width: min(680px, 100%);
+      border-radius: var(--radius-xl);
+      background: rgba(31,27,46,0.84);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modalHead{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+    .modalTitle{
+      margin: 0;
+      font-size: 1.04rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .modalBody{ padding: 14px 14px 16px; }
+    .modalFoot{
+      padding: 12px 14px 14px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      display:flex;
+      justify-content:flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .srOnly{
+      position:absolute;
+      width:1px;height:1px;
+      padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0,0,0,0);
+      white-space:nowrap;border:0;
+    }
+
+    /* Small back row */
+    .backRow{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 16px 0 0;
+    }
+    .backLink{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.10);
+      text-decoration:none;
+      transition: transform 140ms ease, background 140ms ease;
+    }
+    .backLink:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.12); text-decoration:none; }
+    .backLink:focus-visible{ outline:none; box-shadow: var(--focusRing); }
+    .backLink .arrow{
+      width: 18px; height: 18px; border-radius: 9px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    html, body{
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/old Edge */
+}
+body::-webkit-scrollbar{
+  display: none;              /* Chrome/Safari/Opera */
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+  <header class="header header--full" aria-label="SkillSwap header">
+    <div class="brand" aria-label="SkillSwap">
+      <div class="brandName">SKILLSWAP</div>
+    </div>
+
+    <button class="menuBtn" id="menuButton" type="button"
+      aria-haspopup="dialog" aria-controls="menuOverlay" aria-expanded="false">
+      <span class="srOnly">Open menu</span>
+      <span class="hamburger" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+    </button>
+  </header>
+</div>
+
+  <!-- Menu overlay -->
+  <div class="menuOverlay" id="menuOverlay" hidden role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="menuPanel" role="document">
+      <div class="menuHead">
+        <div class="title">Menu</div>
+        <button class="iconBtn" id="menuClose" type="button">
+          Close
+        </button>
+      </div>
+      <div class="menuBody">
+        <nav class="menuList" aria-label="Primary">
+          <a class="menuItem" href="home.html">
+            <span>Portfolio Home</span>
+            <span class="hint">home.html</span>
+          </a>
+          <a class="menuItem" href="index.html">
+            <span>Landing</span>
+            <span class="hint">index.html</span>
+          </a>
+          <a class="menuItem" href="login.html">
+            <span>Login</span>
+            <span class="hint">login.html</span>
+          </a>
+          <a class="menuItem" href="validation-details.html">
+            <span>Validation</span>
+            <span class="hint">validation-details.html</span>
+          </a>
+        </nav>
+
+        <div class="hr"></div>
+        <div class="muted2" style="font-size:0.92rem;">
+          Demo user: Alex Morgan — Frontend Developer
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Iteration modal -->
+  <div class="modal" id="iterationModal" hidden role="dialog" aria-modal="true" aria-labelledby="iterationModalTitle">
+    <div class="modalPanel" role="document">
+      <div class="modalHead">
+        <h2 class="modalTitle" id="iterationModalTitle">Add iteration</h2>
+        <button class="iconBtn" id="iterationClose" type="button">Close</button>
+      </div>
+
+      <form id="iterationForm" class="modalBody" novalidate>
+        <div style="display:grid; gap:10px;">
+          <div>
+            <label for="itChange">What changed (1 line)</label>
+            <input id="itChange" name="itChange" type="text" placeholder="Example: Improved filters + added export states" required maxlength="140" />
+          </div>
+
+          <div class="formRow">
+            <div>
+              <label for="itRepo">Repo link (optional)</label>
+              <input id="itRepo" name="itRepo" type="url" inputmode="url" placeholder="https://github.com/..." />
+            </div>
+            <div>
+              <label for="itFigma">Figma link (optional)</label>
+              <input id="itFigma" name="itFigma" type="url" inputmode="url" placeholder="https://figma.com/..." />
+            </div>
+          </div>
+
+          <div>
+            <label for="itDemo">Demo link (optional)</label>
+            <input id="itDemo" name="itDemo" type="url" inputmode="url" placeholder="https://..." />
+          </div>
+
+          <div class="muted2" style="font-size:0.92rem;">
+            Submitting appends a new timeline item (front-end only).
+          </div>
+        </div>
+      </form>
+
+      <div class="modalFoot">
+        <button class="btn ghost" id="iterationCancel" type="button">Cancel</button>
+        <button class="btn primary" id="iterationSubmit" type="submit" form="iterationForm">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap" id="pageRoot">
+    <div class="backRow">
+      <a class="backLink" href="home.html" aria-label="Back to home">
+        <span class="arrow" aria-hidden="true">←</span>
+        <span>Back</span>
+      </a>
+
+      <div class="muted2" style="font-size:0.92rem;">
+        Project details
+      </div>
+    </div>
+
+    <!-- Project Header area -->
+    <section class="card" aria-label="Project header" style="margin-top: 12px;">
+      <div class="cardHeader">
+        <div>
+          <h1 class="h" style="font-size: 1.18rem; margin:0;">E-Commerce Dashboard</h1>
+          <div class="pillRow">
+            <span class="badge" id="statusBadge" data-status="verified" aria-label="Project status">
+              <span class="dot" aria-hidden="true"></span>
+              <span id="statusText">Verified</span>
+            </span>
+
+            <span class="badge" aria-label="Last activity">
+              <span class="muted2">Last activity</span>
+              <span id="lastActivity">Today, 10:10</span>
+            </span>
+
+            <span class="badge" aria-label="Portfolio strength impact">
+              <span class="muted2">Impact</span>
+              <span>+0.4 (light)</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="actions" aria-label="Project actions">
+          <button class="btn ghost" id="markCheckpointBtn" type="button">Mark checkpoint</button>
+          <a class="btn primary" href="validation-details.html" role="button">Request review</a>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <div class="kvs" aria-label="Project info">
+          <div class="kv">
+            <div class="k">Owner</div>
+            <div class="v">Alex Morgan <small class="muted2">— Frontend Developer</small></div>
+          </div>
+          <div class="kv">
+            <div class="k">Checkpoint status</div>
+            <div class="v" id="checkpointStatus">None</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid" aria-label="Project content">
+      <!-- Left column -->
+      <div style="display:grid; gap:14px;">
+
+        <!-- Evidence section -->
+        <section class="card" aria-label="Evidence">
+          <div class="cardHeader">
+            <h2 class="h">Evidence</h2>
+            <div class="muted2" style="font-size:0.92rem;">Required for Verified</div>
+          </div>
+
+          <div class="cardBody">
+            <div class="evidenceGrid">
+              <div class="linkCard" role="group" aria-label="Git repo link">
+                <div class="top">
+                  <div class="label">Git repo</div>
+                  <div class="meta">Artifact</div>
+                </div>
+                <div class="mono" id="repoLinkText">https://github.com/skillswap/demo-ecom-dashboard</div>
+                <div class="muted2" style="font-size:0.92rem;">
+                  <a href="https://github.com/skillswap/demo-ecom-dashboard" target="_blank" rel="noreferrer">Open link</a>
+                </div>
+              </div>
+
+              <div class="linkCard" role="group" aria-label="Figma link">
+                <div class="top">
+                  <div class="label">Figma</div>
+                  <div class="meta">Artifact</div>
+                </div>
+                <div class="mono" id="figmaLinkText">https://figma.com/file/skillswap-ecom-dashboard</div>
+                <div class="muted2" style="font-size:0.92rem;">
+                  <a href="https://figma.com/file/skillswap-ecom-dashboard" target="_blank" rel="noreferrer">Open link</a>
+                </div>
+              </div>
+
+              <div class="linkCard" role="group" aria-label="Demo link">
+                <div class="top">
+                  <div class="label">Demo</div>
+                  <div class="meta">Artifact</div>
+                </div>
+                <div class="mono" id="demoLinkText">https://demo.skillswap.com/ecom-dashboard</div>
+                <div class="muted2" style="font-size:0.92rem;">
+                  <a href="https://demo.skillswap.com/ecom-dashboard" target="_blank" rel="noreferrer">Open link</a>
+                </div>
+              </div>
+
+              <div class="linkCard" role="group" aria-label="Docs link">
+                <div class="top">
+                  <div class="label">Docs</div>
+                  <div class="meta">Optional</div>
+                </div>
+                <div class="mono" id="docsLinkText">https://docs.skillswap.com/ecom-dashboard</div>
+                <div class="muted2" style="font-size:0.92rem;">
+                  <a href="https://docs.skillswap.com/ecom-dashboard" target="_blank" rel="noreferrer">Open link</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="hr"></div>
+            <div class="muted2" style="font-size:0.92rem;">
+              Tip: later, evidence can be auto-validated (repo activity, publish timestamps, design diffs).
+            </div>
+          </div>
+        </section>
+
+        <!-- Iteration timeline -->
+        <section class="card" aria-label="Iteration timeline">
+          <div class="cardHeader">
+            <h2 class="h">Iteration Timeline</h2>
+            <button class="btn" id="addIterationBtn" type="button">Add iteration</button>
+          </div>
+
+          <div class="cardBody">
+            <div class="timeline" id="timeline">
+              <article class="tItem" data-version="v3">
+                <div class="tTop">
+                  <div class="tVer">v3</div>
+                  <div class="tDate">2026-01-08 21:10</div>
+                </div>
+                <div class="tChange">Polished data table states and improved keyboard navigation.</div>
+                <div class="tArtifacts">
+                  <span class="chip">Repo: <a href="https://github.com/skillswap/demo-ecom-dashboard" target="_blank" rel="noreferrer">link</a></span>
+                  <span class="chip">Demo: <a href="https://demo.skillswap.com/ecom-dashboard" target="_blank" rel="noreferrer">link</a></span>
+                </div>
+              </article>
+
+              <article class="tItem" data-version="v2">
+                <div class="tTop">
+                  <div class="tVer">v2</div>
+                  <div class="tDate">2026-01-06 18:40</div>
+                </div>
+                <div class="tChange">Added filter panel + export flow with loading + error states.</div>
+                <div class="tArtifacts">
+                  <span class="chip">Figma: <a href="https://figma.com/file/skillswap-ecom-dashboard" target="_blank" rel="noreferrer">link</a></span>
+                </div>
+              </article>
+
+              <article class="tItem" data-version="v1">
+                <div class="tTop">
+                  <div class="tVer">v1</div>
+                  <div class="tDate">2026-01-03 11:05</div>
+                </div>
+                <div class="tChange">Initial dashboard layout with KPI cards and orders table.</div>
+                <div class="tArtifacts">
+                  <span class="chip">Docs: <a href="https://docs.skillswap.com/ecom-dashboard" target="_blank" rel="noreferrer">link</a></span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right column -->
+      <aside style="display:grid; gap:14px;">
+        <!-- Checkpoints + Review Request -->
+        <section class="card" aria-label="Checkpoints and review request">
+          <div class="cardHeader">
+            <h2 class="h">Checkpoints + Review</h2>
+            <div class="muted2" style="font-size:0.92rem;">CP1 → CP2 → Review</div>
+          </div>
+          <div class="cardBody" style="display:grid; gap:10px;">
+            <div class="kv">
+              <div class="k">Current checkpoint status</div>
+              <div class="v" id="checkpointStatus2">None</div>
+            </div>
+
+            <div class="formRow">
+              <div>
+                <label for="checkpointSelect">Choose checkpoint</label>
+                <select id="checkpointSelect" name="checkpointSelect">
+                  <option value="cp1">Checkpoint 1 (early feedback)</option>
+                  <option value="cp2">Checkpoint 2 (verification checkpoint)</option>
+                </select>
+              </div>
+              <div style="display:flex; align-items:flex-end; gap:10px;">
+                <button class="btn ghost" id="markCheckpointConfirmBtn" type="button" style="width:100%;">Mark checkpoint</button>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a class="btn primary" href="validation-details.html" role="button">Request review</a>
+              <button class="btn" id="resetCheckpointBtn" type="button">Reset</button>
+            </div>
+
+            <div class="muted2" style="font-size:0.92rem;">
+              Product rule: Verified projects should have evidence links and CP2 completed.
+            </div>
+          </div>
+        </section>
+
+        <!-- System Activity log -->
+        <section class="card" aria-label="System activity log">
+          <div class="cardHeader">
+            <h2 class="h">System Activity</h2>
+            <button class="btn ghost" id="clearLogBtn" type="button">Clear</button>
+          </div>
+
+          <div class="cardBody">
+            <ul class="log" id="activityLog" aria-label="Activity entries">
+              <li class="logItem">
+                <div class="msg">Loaded project details.</div>
+                <div class="ts" data-ts></div>
+              </li>
+              <li class="logItem">
+                <div class="msg">Evidence links available.</div>
+                <div class="ts" data-ts></div>
+              </li>
+              <li class="logItem">
+                <div class="msg">Project status set to Verified.</div>
+                <div class="ts" data-ts></div>
+              </li>
+            </ul>
+
+            <div class="hr"></div>
+            <div class="muted2" style="font-size:0.92rem;">
+              Log is front-end only; later can be persisted.
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // ===== Shared menu controller (ONE controller, uses [hidden]) =====
+    (function(){
+      const menuButton = document.getElementById('menuButton');
+      const menuOverlay = document.getElementById('menuOverlay');
+      const menuClose = document.getElementById('menuClose');
+
+      let lastFocusEl = null;
+
+      function openMenu(){
+        lastFocusEl = document.activeElement;
+        menuOverlay.hidden = false;
+        menuButton.setAttribute('aria-expanded', 'true');
+        menuClose.focus();
+      }
+
+      function closeMenu(){
+        menuOverlay.hidden = true;
+        menuButton.setAttribute('aria-expanded', 'false');
+        if (lastFocusEl && typeof lastFocusEl.focus === 'function') lastFocusEl.focus();
+      }
+
+      menuButton.addEventListener('click', () => {
+        if (menuOverlay.hidden) openMenu();
+        else closeMenu();
+      });
+
+      menuClose.addEventListener('click', closeMenu);
+
+      menuOverlay.addEventListener('click', (e) => {
+        // Click outside panel closes
+        const panel = menuOverlay.querySelector('.menuPanel');
+        if (!panel.contains(e.target)) closeMenu();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !menuOverlay.hidden) closeMenu();
+      });
+    })();
+
+    // ===== Helpers =====
+    function pad2(n){ return String(n).padStart(2,'0'); }
+    function nowStamp(){
+      const d = new Date();
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    }
+    function nowFriendly(){
+      const d = new Date();
+      return `Today, ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    }
+
+    function addLog(message){
+      const log = document.getElementById('activityLog');
+      const li = document.createElement('li');
+      li.className = 'logItem';
+      li.innerHTML = `
+        <div class="msg"></div>
+        <div class="ts"></div>
+      `;
+      li.querySelector('.msg').textContent = message;
+      li.querySelector('.ts').textContent = nowStamp();
+      log.prepend(li);
+    }
+
+    function setLastActivity(){
+      document.getElementById('lastActivity').textContent = nowFriendly();
+    }
+
+    // Seed timestamps for initial static entries
+    (function initLogTimestamps(){
+      document.querySelectorAll('[data-ts]').forEach((el, idx) => {
+        const d = new Date(Date.now() - (idx * 1000 * 60 * 8));
+        el.textContent = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      });
+    })();
+
+    // ===== Iteration modal + timeline append =====
+    (function(){
+      const modal = document.getElementById('iterationModal');
+      const openBtn = document.getElementById('addIterationBtn');
+      const closeBtn = document.getElementById('iterationClose');
+      const cancelBtn = document.getElementById('iterationCancel');
+      const form = document.getElementById('iterationForm');
+      const itChange = document.getElementById('itChange');
+      const itRepo = document.getElementById('itRepo');
+      const itFigma = document.getElementById('itFigma');
+      const itDemo = document.getElementById('itDemo');
+      const timeline = document.getElementById('timeline');
+
+      let lastFocusEl = null;
+
+      function getNextVersion(){
+        const items = Array.from(timeline.querySelectorAll('.tItem'));
+        const max = items.reduce((acc, el) => {
+          const v = el.getAttribute('data-version') || '';
+          const num = parseInt(v.replace('v',''), 10);
+          return Number.isFinite(num) ? Math.max(acc, num) : acc;
+        }, 0);
+        return `v${max + 1}`;
+      }
+
+      function openModal(){
+        lastFocusEl = document.activeElement;
+        modal.hidden = false;
+        itChange.focus();
+      }
+
+      function closeModal(){
+        modal.hidden = true;
+        form.reset();
+        if (lastFocusEl && typeof lastFocusEl.focus === 'function') lastFocusEl.focus();
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', (e) => {
+        const panel = modal.querySelector('.modalPanel');
+        if (!panel.contains(e.target)) closeModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const change = itChange.value.trim();
+        if (!change){
+          itChange.focus();
+          itChange.setAttribute('aria-invalid', 'true');
+          return;
+        }
+        itChange.removeAttribute('aria-invalid');
+
+        const version = getNextVersion();
+        const date = nowStamp();
+
+        const artifacts = [];
+        const repo = itRepo.value.trim();
+        const figma = itFigma.value.trim();
+        const demo = itDemo.value.trim();
+
+        if (repo) artifacts.push({ label: 'Repo', url: repo });
+        if (figma) artifacts.push({ label: 'Figma', url: figma });
+        if (demo) artifacts.push({ label: 'Demo', url: demo });
+
+        const artHtml = artifacts.length
+          ? `<div class="tArtifacts">
+              ${artifacts.map(a => `
+                <span class="chip">${a.label}: <a href="${a.url}" target="_blank" rel="noreferrer">link</a></span>
+              `).join('')}
+            </div>`
+          : `<div class="tArtifacts"><span class="chip">Artifacts: <span class="muted2">None added</span></span></div>`;
+
+        const article = document.createElement('article');
+        article.className = 'tItem';
+        article.setAttribute('data-version', version);
+        article.innerHTML = `
+          <div class="tTop">
+            <div class="tVer">${version}</div>
+            <div class="tDate">${date}</div>
+          </div>
+          <div class="tChange"></div>
+          ${artHtml}
+        `;
+        article.querySelector('.tChange').textContent = change;
+
+        timeline.prepend(article);
+
+        setLastActivity();
+        addLog(`Iteration added (${version}).`);
+
+        closeModal();
+      });
+    })();
+
+    // ===== Checkpoints =====
+    (function(){
+      const checkpointStatus = document.getElementById('checkpointStatus');
+      const checkpointStatus2 = document.getElementById('checkpointStatus2');
+      const select = document.getElementById('checkpointSelect');
+      const markBtnInline = document.getElementById('markCheckpointConfirmBtn');
+      const markBtnHeader = document.getElementById('markCheckpointBtn');
+      const resetBtn = document.getElementById('resetCheckpointBtn');
+
+      let state = 'none'; // none | cp1 | cp2
+
+      function render(){
+        const label = state === 'cp1'
+          ? 'CP1 done'
+          : state === 'cp2'
+            ? 'CP2 done'
+            : 'None';
+        checkpointStatus.textContent = label;
+        checkpointStatus2.textContent = label;
+      }
+
+      function mark(cp){
+        if (cp === 'cp2' && state !== 'cp2'){
+          state = 'cp2';
+          addLog('Checkpoint 2 marked (verification checkpoint).');
+        } else if (cp === 'cp1' && state === 'none'){
+          state = 'cp1';
+          addLog('Checkpoint 1 marked (early feedback).');
+        } else if (cp === 'cp1' && state !== 'none'){
+          addLog('Checkpoint 1 already completed.');
+        } else if (cp === 'cp2' && state === 'cp2'){
+          addLog('Checkpoint 2 already completed.');
+        }
+        setLastActivity();
+        render();
+      }
+
+      function reset(){
+        state = 'none';
+        addLog('Checkpoint status reset.');
+        setLastActivity();
+        render();
+      }
+
+      markBtnInline.addEventListener('click', () => mark(select.value));
+
+      // Header button: quick mark with choice (uses current select value for simplicity)
+      markBtnHeader.addEventListener('click', () => {
+        mark(select.value);
+        // bring attention to status
+        checkpointStatus2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      resetBtn.addEventListener('click', reset);
+
+      render();
+    })();
+
+    // ===== Activity log clear =====
+    (function(){
+      const clearBtn = document.getElementById('clearLogBtn');
+      const log = document.getElementById('activityLog');
+
+      clearBtn.addEventListener('click', () => {
+        log.innerHTML = '';
+        addLog('System log cleared.');
+        setLastActivity();
+      });
+    })();
+
+    // Initialize last activity display
+    (function(){
+      document.getElementById('lastActivity').textContent = nowFriendly();
+    })();
+    
+  </script>
+</body>
+</html>
+```

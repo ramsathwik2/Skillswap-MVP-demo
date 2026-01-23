@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillSwap - Log In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ---- Tokens (from homepage) ---- */
+    :root {
+      --bg: #9F87C3;
+      --font: "Onest", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      --r-sm: 10px;
+      --r-md: 18px;
+      --w-94: rgba(255,255,255,0.94);
+      --w-86: rgba(255,255,255,0.86);
+      --w-78: rgba(255,255,255,0.78);
+      --w-70: rgba(255,255,255,0.70);
+      --ink: #1F1B2E;
+      --shadow: 0 18px 40px rgba(0,0,0,0.18);
+      --shadow-strong: 0 26px 70px rgba(0,0,0,0.22);
+    }
+
+    /* ---- Base ---- */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--w-94);
+      overflow-x: hidden;
+      text-rendering: geometricPrecision;
+    }
+
+    /* Background glow */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -120px;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(900px 600px at 76% 18%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(900px 620px at 20% 14%, rgba(0,0,0,.10), transparent 62%);
+    }
+
+    a { color: inherit; }
+
+    /* Skip link */
+    .skip {
+      position: absolute;
+      left: -9999px;
+      top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      text-decoration: none;
+    }
+    .skip:focus { left: 12px; z-index: 9999; }
+
+    /* ---- Header (topbar) ---- */
+    .topbar {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding-left: clamp(18px, 3vw, 80px);
+      padding-right: clamp(18px, 3vw, 80px);
+      padding-top: 18px;
+      padding-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 900;
+      text-decoration: none;
+      color: var(--w-86);
+    }
+
+    .menuBtn {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    .menuIcon,
+    .menuIcon::before,
+    .menuIcon::after {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      position: relative;
+    }
+    .menuIcon::before { position: absolute; top: -6px; left: 0; }
+    .menuIcon::after { position: absolute; top: 6px; left: 0; }
+
+    /* ---- Menu overlay ---- */
+    .menuOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 8, 16, 0.40);
+      z-index: 9999;
+      display: none;
+    }
+
+    .menuOverlay:not([hidden]) {
+      display: grid;
+      place-items: start end;
+      padding: 16px;
+    }
+
+    .menuOverlay[hidden] {
+      display: none !important;
+    }
+
+    .menuPanel {
+      width: min(380px, 92vw);
+      border-radius: 18px;
+      background: rgba(31, 27, 46, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: var(--shadow-strong);
+      padding: 14px;
+      max-width: 100vw;
+      overflow-x: hidden;
+      overflow-y: auto;
+      pointer-events: auto;
+    }
+
+    .menuClose {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.10);
+      color: var(--w-94);
+      padding: 10px 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .menuList {
+      list-style: none;
+      padding: 10px 0 6px;
+      margin: 0;
+    }
+    .menuList a {
+      display: block;
+      padding: 10px 10px;
+      border-radius: 10px;
+      color: var(--w-86);
+      text-decoration: none;
+    }
+    .menuList a:hover { background: rgba(255,255,255,0.08); }
+
+    .menuCta {
+      display: flex;
+      gap: 10px;
+      padding-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ---- Scrollbar hide ---- */
+    * {
+      scrollbar-width: none;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    html, body {
+      overflow-y: auto;
+    }
+
+    /* ---- Login Container ---- */
+    .loginContainer {
+      display: grid;
+      place-items: center;
+      min-height: calc(100vh - 80px);
+      padding: 40px 20px;
+    }
+
+    .loginBox {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(31, 27, 46, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 24px;
+      padding: 56px 40px;
+      box-shadow: var(--shadow-strong);
+      backdrop-filter: blur(10px);
+    }
+
+    .loginBox::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        radial-gradient(500px 260px at 20% 10%, rgba(255,255,255,0.08), transparent 60%),
+        radial-gradient(420px 240px at 90% 20%, rgba(159,135,195,0.18), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      border-radius: 24px;
+      z-index: -1;
+    }
+
+    .loginBox {
+      position: relative;
+    }
+
+    .loginTitle {
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--w-94);
+    }
+
+    .loginSubtitle {
+      margin: 0 0 32px;
+      font-size: 13px;
+      color: var(--w-78);
+      letter-spacing: 0.01em;
+    }
+
+    .formGroup {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 18px;
+    }
+
+    .formLabel {
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--w-86);
+    }
+
+    .formInput {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--w-94);
+      font-size: 14px;
+      font-family: var(--font);
+      transition: all 180ms ease;
+    }
+
+    .formInput::placeholder {
+      color: rgba(255, 255, 255, 0.50);
+    }
+
+    .formInput:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.30);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 0 3px rgba(159, 135, 195, 0.25);
+    }
+
+    .passwordWrapper {
+      position: relative;
+    }
+
+    .togglePassword {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.60);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px 8px;
+      transition: color 150ms ease;
+    }
+
+    .togglePassword:hover {
+      color: var(--w-94);
+    }
+
+    .formInput[type="password"] {
+      padding-right: 42px;
+    }
+
+    .forgotLink {
+      display: block;
+      text-align: right;
+      margin-bottom: 24px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.70);
+      text-decoration: none;
+      transition: color 150ms ease;
+    }
+
+    .forgotLink:hover {
+      color: var(--w-94);
+    }
+
+    .loginBtn {
+      width: 100%;
+      height: 44px;
+      border: none;
+      border-radius: 10px;
+      background: var(--ink);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 180ms ease;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    .loginBtn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.28);
+    }
+
+    .loginBtn:active {
+      transform: translateY(0);
+    }
+
+    .signupLink {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--w-78);
+    }
+
+    .signupLink a {
+      color: var(--w-94);
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 150ms ease;
+    }
+
+    .signupLink a:hover {
+      color: rgba(255, 255, 255, 0.70);
+    }
+
+    .errorMessage {
+      display: none;
+      background: rgba(255, 84, 89, 0.15);
+      border: 1px solid rgba(255, 84, 89, 0.30);
+      color: #FF5459;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .errorMessage.show {
+      display: block;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 640px) {
+      .loginBox {
+        padding: 40px 24px;
+      }
+
+      .loginTitle {
+        font-size: 22px;
+      }
+
+      .loginSubtitle {
+        margin-bottom: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">Skip to main</a>
+
+  <!-- Header -->
+  <header class="topbar">
+    <a href="index.html" class="brand">SkillSwap</a>
+    <button class="menuBtn" id="menuToggle" aria-label="Open menu">
+      <div class="menuIcon"></div>
+    </button>
+  </header>
+
+  <!-- Menu Overlay -->
+  <div class="menuOverlay" id="menuOverlay" hidden>
+    <div class="menuPanel">
+      <button class="menuClose" id="menuClose">Close</button>
+      <ul class="menuList">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="menuCta">
+        <button class="btn ghost">Log In</button>
+        <button class="btn primary">Sign Up</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Login -->
+  <main id="main" class="loginContainer">
+    <div class="loginBox">
+      <h1 class="loginTitle">Log In</h1>
+      <p class="loginSubtitle">Enter your credentials to continue</p>
+
+      <div class="errorMessage" id="errorMessage"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="formGroup">
+          <label class="formLabel">Email</label>
+          <input
+            type="email"
+            class="formInput"
+            id="email"
+            placeholder="demo@skillswap.com"
+            required
+          />
+        </div>
+
+        <div class="formGroup">
+          <label class="formLabel">Password</label>
+          <div class="passwordWrapper">
+            <input
+              type="password"
+              class="formInput"
+              id="password"
+              placeholder="skillswap123"
+              required
+            />
+            <button
+              type="button"
+              class="togglePassword"
+              id="togglePassword"
+              aria-label="Toggle password visibility"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <a href="#" class="forgotLink">Forgot password?</a>
+
+        <button type="submit" class="loginBtn">Log In</button>
+      </form>
+
+      <div class="signupLink">
+        Don't have an account? <a href="signup.html">Sign up</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const menuClose = document.getElementById('menuClose');
+
+    menuToggle.addEventListener('click', () => {
+      menuOverlay.removeAttribute('hidden');
+    });
+
+    menuClose.addEventListener('click', () => {
+      menuOverlay.setAttribute('hidden', '');
+    });
+
+    menuOverlay.addEventListener('click', (e) => {
+      if (e.target === menuOverlay) {
+        menuOverlay.setAttribute('hidden', '');
+      }
+    });
+
+    // Password toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePassword.textContent = isPassword ? 'Hide' : 'Show';
+    });
+
+    // Login handler
+    function handleLogin(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+
+      // Sample credentials
+      const validEmail = 'demo@skillswap.com';
+      const validPassword = 'skillswap123';
+
+      if (email === validEmail && password === validPassword) {
+        // Success: redirect to home (portfolio page)
+        window.location.href = 'home.html';
+      } else {
+        // Show error
+        errorMessage.textContent = 'Invalid email or password. Try: demo@skillswap.com / skillswap123';
+        errorMessage.classList.add('show');
+      }
+    }
+    
+  </script>
+</body>
+</html>

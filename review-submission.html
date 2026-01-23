@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkillSwap — Review Submission</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#9F87C3;
+      --glass:rgba(31,27,46,0.72);
+      --stroke:rgba(255,255,255,0.16);
+      --text:rgba(255,255,255,0.92);
+      --muted:rgba(255,255,255,0.72);
+      --muted-2:rgba(255,255,255,0.60);
+      --shadow-soft:0 10px 30px rgba(0,0,0,0.12);
+      --shadow:0 20px 60px rgba(0,0,0,0.18);
+      --radius-xl:22px;
+      --radius-lg:18px;
+      --max:960px;
+      --focusRing:0 0 0 3px rgba(255,255,255,0.22), 0 0 0 1px rgba(31,27,46,0.35) inset;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:"Onest",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.35;
+    }
+
+    /* Hide scrollbar but keep scroll */
+    html,body{overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-ms-overflow-style:none;}
+    body::-webkit-scrollbar{display:none;}
+
+    a{color:inherit;text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .wrap{max-width:var(--max);margin:0 auto;padding:18px 18px 56px;}
+
+    .topbar{
+      position:sticky;top:0;z-index:30;
+      padding:18px 28px;
+      background:linear-gradient(to bottom, rgba(159,135,195,0.92), rgba(159,135,195,0.68), rgba(159,135,195,0));
+      backdrop-filter:blur(10px);
+    }
+    @media (max-width:720px){.topbar{padding:16px 16px;}}
+    .header{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brandName{font-weight:700;letter-spacing:0.14em;font-size:0.95rem;user-select:none;}
+
+    .menuBtn{
+      appearance:none;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(31,27,46,0.14);backdrop-filter:blur(8px);
+      color:var(--text);border-radius:14px;padding:10px 12px;cursor:pointer;
+      transition:transform 140ms ease, background 140ms ease;
+      display:flex;align-items:center;gap:10px;
+    }
+    .menuBtn:hover{transform:translateY(-1px);background:rgba(31,27,46,0.18);}
+    .menuBtn:active{transform:translateY(0);}
+    .menuBtn:focus-visible{outline:none;box-shadow:var(--focusRing);}
+    .hamburger{width:18px;height:12px;position:relative;display:inline-block;}
+    .hamburger span{position:absolute;left:0;right:0;height:2px;border-radius:2px;background:rgba(255,255,255,0.90);}
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){top:5px;opacity:0.85;}
+    .hamburger span:nth-child(3){bottom:0;opacity:0.7;}
+
+    .card{border-radius:var(--radius-xl);background:var(--glass);border:1px solid var(--stroke);box-shadow:var(--shadow-soft);overflow:hidden;}
+    .cardHeader{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.10);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .cardHeader .h{margin:0;font-weight:650;letter-spacing:0.2px;font-size:1.02rem;}
+    .cardBody{padding:14px 16px 16px;}
+
+    .muted{color:var(--muted);}
+    .muted2{color:var(--muted-2);}
+
+    .btn{
+      appearance:none;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.12);color:var(--text);
+      border-radius:14px;padding:10px 12px;cursor:pointer;
+      transition:transform 140ms ease, background 140ms ease;
+      font-weight:600;letter-spacing:0.2px;text-decoration:none;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      white-space:nowrap;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,0.14);text-decoration:none;}
+    .btn:active{transform:translateY(0);}
+    .btn:focus-visible{outline:none;box-shadow:var(--focusRing);}
+    .btn.primary{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.22);}
+    .btn.ghost{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.14);}
+
+    .hr{height:1px;background:rgba(255,255,255,0.10);margin:12px 0;}
+
+    .pillRow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.08);font-size:0.92rem;}
+
+    label{display:block;font-size:0.90rem;color:var(--muted);margin-bottom:6px;}
+    input,textarea,select{
+      width:100%;
+      border-radius:14px;border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.10);color:var(--text);
+      padding:10px 12px;outline:none;
+      transition:box-shadow 140ms ease, border-color 140ms ease, background 140ms ease;
+      font:inherit;
+    }
+    textarea{resize:vertical;min-height:120px;}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.55);}
+    input:focus,textarea:focus,select:focus{box-shadow:var(--focusRing);border-color:rgba(255,255,255,0.24);background:rgba(255,255,255,0.12);}
+
+    .formRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media (max-width:720px){.formRow{grid-template-columns:1fr;}}
+
+    .evidence{display:grid;gap:10px;}
+    .eItem{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .eItem .name{font-weight:650;letter-spacing:0.2px;}
+    .eItem .url{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:0.92rem;color:rgba(255,255,255,0.86);word-break:break-word;margin-top:6px;}
+    .eItem .meta{color:var(--muted-2);font-size:0.90rem;}
+    .eItem a{text-decoration:underline;text-decoration-color:rgba(255,255,255,0.30);}
+
+    .log{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
+    .logItem{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .logItem .msg{color:rgba(255,255,255,0.90);}
+    .logItem .ts{color:var(--muted-2);font-size:0.90rem;white-space:nowrap;}
+
+    .note{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;color:rgba(255,255,255,0.90);font-size:0.92rem;}
+
+    .srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <header class="header" aria-label="SkillSwap header">
+      <div class="brandName">SKILLSWAP</div>
+
+      <button class="menuBtn" id="menuButton" type="button" aria-haspopup="dialog" aria-controls="menuOverlay" aria-expanded="false">
+        <span class="srOnly">Open menu</span>
+        <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </header>
+  </div>
+
+  <main class="wrap">
+    <section class="card" style="margin-top:12px;" aria-label="Review task header">
+      <div class="cardHeader">
+        <div>
+          <h1 class="h" style="font-size:1.18rem;">Review submission</h1>
+          <div class="muted2" style="font-size:0.92rem;">Submit rubric + notes for this request</div>
+          <div class="pillRow">
+            <span class="badge"><span class="muted2">Request ID</span> <span id="ridText">—</span></span>
+            <span class="badge"><span class="muted2">Project</span> <span id="projectText">—</span></span>
+            <span class="badge"><span class="muted2">Checkpoint</span> <span id="cpText">—</span></span>
+            <span class="badge"><span class="muted2">Reviewer type</span> <span id="rtText">—</span></span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+          <a class="btn ghost" id="backBtn" href="validation-details.html">Back</a>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <div class="note" id="requestNoteBox">
+          Loading request…
+        </div>
+      </div>
+    </section>
+
+    <div style="display:grid; gap:14px; margin-top:14px;">
+      <section class="card" aria-label="Evidence and activity">
+        <div class="cardHeader">
+          <h2 class="h">Evidence + Activity</h2>
+          <div class="muted2" style="font-size:0.92rem;">Reviewer context</div>
+        </div>
+
+        <div class="cardBody">
+          <div class="evidence" id="evidenceList"></div>
+
+          <div class="hr"></div>
+
+          <div class="muted2" style="font-size:0.92rem; margin-bottom:10px;">System Activity</div>
+          <ul class="log" id="activityLog"></ul>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Submission form">
+        <div class="cardHeader">
+          <h2 class="h">Submit review</h2>
+          <div class="muted2" style="font-size:0.92rem;">Rubric + outcome</div>
+        </div>
+
+        <div class="cardBody">
+          <form id="reviewForm" style="display:grid; gap:12px;">
+            <div class="formRow">
+              <div>
+                <label for="rubricScore">Rubric score</label>
+                <select id="rubricScore" name="rubricScore">
+                  <option value="90">90 — Strong</option>
+                  <option value="75" selected>75 — Good</option>
+                  <option value="60">60 — Needs work</option>
+                  <option value="40">40 — Weak</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="confidence">Confidence</label>
+                <select id="confidence" name="confidence">
+                  <option value="high" selected>High</option>
+                  <option value="med">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="reviewNotes">Notes</label>
+              <textarea id="reviewNotes" name="reviewNotes" placeholder="Write concise feedback. No emojis." required></textarea>
+            </div>
+
+            <div>
+              <label for="outcome">Outcome</label>
+              <select id="outcome" name="outcome">
+                <option value="approved">Approved</option>
+                <option value="changes" selected>Needs changes</option>
+                <option value="flagged">Flag suspicious</option>
+              </select>
+            </div>
+
+            <div class="note" id="ruleNote">
+              CP2 “Verified” approval requires evidence + eligible verifier (high-rep). (Mock rule.)
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn primary" type="submit">Submit review</button>
+              <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+            </div>
+
+            <div class="muted2" style="font-size:0.92rem;">
+              Submit = review done → returns to project. Back = review not done → returns to request page.
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    function pad2(n){ return String(n).padStart(2,'0'); }
+    function nowStamp(){
+      const d = new Date();
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    }
+
+    function addLog(message){
+      const log = document.getElementById('activityLog');
+      const li = document.createElement('li');
+      li.className = 'logItem';
+      li.innerHTML = `<div class="msg"></div><div class="ts"></div>`;
+      li.querySelector('.msg').textContent = message;
+      li.querySelector('.ts').textContent = nowStamp();
+      log.appendChild(li);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const rid = params.get('rid'); // request id in URL [web:119]
+
+    const REQUEST_KEY_PREFIX = 'ss_review_request_';
+    const ridText = document.getElementById('ridText');
+    const projectText = document.getElementById('projectText');
+    const cpText = document.getElementById('cpText');
+    const rtText = document.getElementById('rtText');
+    const requestNoteBox = document.getElementById('requestNoteBox');
+    const evidenceList = document.getElementById('evidenceList');
+    const backBtn = document.getElementById('backBtn');
+
+    function cpLabel(cp){
+      return cp === 'cp2' ? 'CP2 (verification checkpoint)' : 'CP1 (early feedback)';
+    }
+    function rtLabel(rt){
+      return rt === 'highrep' ? 'High-rep' : 'Peer';
+    }
+
+    function renderEvidence(payload){
+      const items = [
+        { name: 'Git repo', url: payload.evidence?.repo || '' },
+        { name: 'Figma', url: payload.evidence?.figma || '' },
+        { name: 'Demo', url: payload.evidence?.demo || '' }
+      ];
+
+      evidenceList.innerHTML = '';
+      items.forEach(it => {
+        const row = document.createElement('div');
+        row.className = 'eItem';
+        row.innerHTML = `
+          <div>
+            <div class="name"></div>
+            <div class="url"></div>
+            <div class="meta">Artifact</div>
+          </div>
+          <div class="meta"><a target="_blank" rel="noreferrer">Open</a></div>
+        `;
+        row.querySelector('.name').textContent = it.name;
+        row.querySelector('.url').textContent = it.url || '—';
+        const a = row.querySelector('a');
+        if (it.url){
+          a.href = it.url;
+        }else{
+          a.href = '#';
+          a.addEventListener('click', (e) => e.preventDefault());
+          a.textContent = 'Missing';
+        }
+        evidenceList.appendChild(row);
+      });
+    }
+
+    function loadRequest(){
+      ridText.textContent = rid || '—';
+      backBtn.href = rid ? `validation-details.html` : 'validation-details.html';
+
+      if (!rid){
+        requestNoteBox.textContent = 'Missing request id. Open this page from the invite link.';
+        addLog('Opened reviewer page without rid.');
+        return null;
+      }
+
+      const raw = localStorage.getItem(REQUEST_KEY_PREFIX + rid);
+      if (!raw){
+        requestNoteBox.textContent = 'Request not found in this browser. (Because it is stored in localStorage for MVP.)';
+        addLog('Request not found in localStorage.');
+        return null;
+      }
+
+      const payload = JSON.parse(raw);
+      projectText.textContent = payload.projectTitle || '—';
+      cpText.textContent = cpLabel(payload.checkpoint);
+      rtText.textContent = rtLabel(payload.reviewerType);
+
+      requestNoteBox.textContent = payload.note
+        ? `Request note: ${payload.note}`
+        : 'Request note: (none)';
+
+      renderEvidence(payload);
+
+      addLog('Reviewer opened request.');
+      addLog(`Checkpoint: ${payload.checkpoint.toUpperCase()}.`);
+      addLog('Evidence links visible.');
+      return payload;
+    }
+
+    const payload = loadRequest();
+
+    // Submission behavior
+    const form = document.getElementById('reviewForm');
+    const notes = document.getElementById('reviewNotes');
+    const outcome = document.getElementById('outcome');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function canVerifyCP2(p){
+      return p && p.checkpoint === 'cp2' && p.reviewerType === 'highrep' && p.evidence?.repo && p.evidence?.figma && p.evidence?.demo;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!payload){
+        alert('Cannot submit: request not loaded.');
+        return;
+      }
+
+      const text = notes.value.trim();
+      if (!text){
+        notes.focus();
+        notes.setAttribute('aria-invalid','true');
+        return;
+      }
+      notes.removeAttribute('aria-invalid');
+
+      const result = {
+        rid: payload.rid,
+        submittedAt: nowStamp(),
+        rubricScore: document.getElementById('rubricScore').value,
+        confidence: document.getElementById('confidence').value,
+        outcome: outcome.value,
+        notes: text
+      };
+
+      // store review result for MVP
+      localStorage.setItem('ss_review_result_' + payload.rid, JSON.stringify(result));
+
+      addLog('Review submitted.');
+
+      if (payload.checkpoint === 'cp2' && result.outcome === 'approved' && !canVerifyCP2(payload)){
+        alert('Approved selected, but CP2 cannot become Verified unless reviewer is High-rep and evidence exists (mock rule).');
+      }else{
+        alert('Review saved (mock). Returning to project.');
+      }
+
+      // Review done -> go to project (or home, your choice)
+      window.location.href = 'project-details.html';
+    });
+
+    clearBtn.addEventListener('click', () => {
+      notes.value = '';
+      outcome.value = 'changes';
+      addLog('Submission cleared.');
+    });
+
+    // Back = review not done
+    backBtn.addEventListener('click', (e) => {
+      // Let normal navigation happen
+      addLog('Reviewer left without submitting.');
+    });
+    
+  </script>
+</body>
+</html>

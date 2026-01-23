@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkillSwap — Employers List</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#9F87C3;
+      --glass:rgba(31,27,46,.72);
+      --stroke:rgba(255,255,255,.16);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.72);
+      --shadow:0 20px 60px rgba(0,0,0,.18);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:"Onest",system-ui;
+      background:var(--bg);
+      color:var(--text);
+      overflow-y:auto;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+    body::-webkit-scrollbar{display:none;}
+
+    .wrap{max-width:1080px;margin:0 auto;padding:22px 18px 60px;}
+
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brand{font-weight:700;letter-spacing:.2px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(31,27,46,.20);
+      color:var(--text);
+      text-decoration:none;
+    }
+    .tab:hover{background:rgba(31,27,46,.26)}
+
+    .card{
+      margin-top:14px;
+      background:var(--glass);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .cardHead{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.10)}
+    .headRow{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;}
+    .cardHead h1{margin:0;font-size:1.1rem}
+    .cardHead p{margin:6px 0 0;color:var(--muted)}
+
+    .filter{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:2px;
+      flex:0 0 auto;
+    }
+
+    .filterLabel{
+      color:var(--muted);
+      font-size:.95rem;
+      font-weight:600;
+      user-select:none;
+    }
+
+    .filterSelect{
+      appearance:none;
+      -webkit-appearance:none;
+      -moz-appearance:none;
+      padding:10px 38px 10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(31,27,46,.20);
+      color:var(--text);
+      outline:none;
+      cursor:pointer;
+
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.75) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.75) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 12px) 50%;
+      background-size:6px 6px, 6px 6px;
+      background-repeat:no-repeat;
+    }
+
+    .filterSelect option{color:#111;}
+
+    .list{padding:14px 16px;display:grid;gap:10px;}
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+    }
+    .left{display:flex;flex-direction:column;gap:4px}
+    .name{font-weight:750}
+    .meta{color:var(--muted);font-size:.95rem}
+    .stars{font-weight:850}
+    .rank{opacity:.9;font-weight:800}
+
+    @media (max-width:520px){
+      .headRow{align-items:flex-start;flex-direction:column;}
+      .filter{width:100%}
+      .filterSelect{width:100%}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">SkillSwap</div>
+      <div class="tabs">
+        <a class="tab" href="projects.html">Projects</a>
+        <a class="tab" href="teachers.html">Teachers</a>
+        <a class="tab" href="employers.html">Employers list</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardHead">
+        <div class="headRow">
+          <div>
+            <h1>Employers list</h1>
+            <p>Top rankers combined from Projects + Teaching.</p>
+          </div>
+
+          <div class="filter">
+            <label for="skillFilter" class="filterLabel">Filter</label>
+            <select id="skillFilter" class="filterSelect">
+              <option value="all">All</option>
+              <!-- other options auto-added by JS -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="list" id="employersList">
+        <div class="row" data-skill="Web Dev">
+          <div class="left">
+            <div class="name"><span class="rank">#1</span> Aman</div>
+            <div class="meta">P: 2 • T: 7 • Web Dev</div>
+          </div>
+          <div class="stars">⭐ 9</div>
+        </div>
+
+        <div class="row" data-skill="UI/UX">
+          <div class="left">
+            <div class="name"><span class="rank">#2</span> Neha</div>
+            <div class="meta">P: 3 • T: 5 • UI/UX</div>
+          </div>
+          <div class="stars">⭐ 8</div>
+        </div>
+
+        <div class="row" data-skill="React">
+          <div class="left">
+            <div class="name"><span class="rank">#3</span> Karthik</div>
+            <div class="meta">P: 4 • T: 4 • React</div>
+          </div>
+          <div class="stars">⭐ 8</div>
+        </div>
+
+        <div class="row" data-skill="UI/UX">
+          <div class="left">
+            <div class="name"><span class="rank">#4</span> Riya</div>
+            <div class="meta">P: 5 • T: 2 • UI/UX</div>
+          </div>
+          <div class="stars">⭐ 7</div>
+        </div>
+
+        <div class="row" data-skill="Product Design">
+          <div class="left">
+            <div class="name"><span class="rank">#5</span> Priya</div>
+            <div class="meta">P: 4 • T: 3 • Product Design</div>
+          </div>
+          <div class="stars">⭐ 7</div>
+        </div>
+
+        <div class="row" data-skill="Frontend">
+          <div class="left">
+            <div class="name"><span class="rank">#6</span> Arjun</div>
+            <div class="meta">P: 5 • T: 1 • Frontend</div>
+          </div>
+          <div class="stars">⭐ 6</div>
+        </div>
+
+        <div class="row" data-skill="DSA">
+          <div class="left">
+            <div class="name"><span class="rank">#7</span> Rohit</div>
+            <div class="meta">P: 2 • T: 3 • DSA</div>
+          </div>
+          <div class="stars">⭐ 5</div>
+        </div>
+
+        <div class="row" data-skill="Frontend">
+          <div class="left">
+            <div class="name"><span class="rank">#8</span> Sanya</div>
+            <div class="meta">P: 3 • T: 2 • Frontend</div>
+          </div>
+          <div class="stars">⭐ 5</div>
+        </div>
+
+        <div class="row" data-skill="Figma">
+          <div class="left">
+            <div class="name"><span class="rank">#9</span> Ananya</div>
+            <div class="meta">P: 4 • T: 0 • Figma</div>
+          </div>
+          <div class="stars">⭐ 4</div>
+        </div>
+
+        <div class="row" data-skill="Accessibility">
+          <div class="left">
+            <div class="name"><span class="rank">#10</span> Nishant</div>
+            <div class="meta">P: 3 • T: 1 • Accessibility</div>
+          </div>
+          <div class="stars">⭐ 4</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const skillFilter = document.getElementById('skillFilter');
+    const rows = Array.from(document.querySelectorAll('#employersList .row'));
+
+    // Build unique skill options from rows
+    const skills = Array.from(new Set(rows.map(r => (r.dataset.skill || '').trim()).filter(Boolean)))
+      .sort((a,b) => a.localeCompare(b));
+
+    skills.forEach(skill => {
+      const opt = document.createElement('option');
+      opt.value = skill;
+      opt.textContent = skill;
+      skillFilter.appendChild(opt);
+    });
+
+    function applyFilter() {
+      const value = skillFilter.value;
+
+      rows.forEach(row => {
+        const skill = (row.dataset.skill || '').trim();
+        const show = (value === 'all') || (skill === value);
+        row.style.display = show ? 'flex' : 'none';
+      });
+    }
+
+    skillFilter.addEventListener('change', applyFilter);  // recommended event listener API [page:1]
+    applyFilter();
+  </script>
+</body>
+</html>

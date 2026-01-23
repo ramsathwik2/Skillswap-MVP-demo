@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkillSwap — Validation Details</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#9F87C3;
+      --glass:rgba(31,27,46,0.72);
+      --stroke:rgba(255,255,255,0.16);
+      --text:rgba(255,255,255,0.92);
+      --muted:rgba(255,255,255,0.72);
+      --muted-2:rgba(255,255,255,0.60);
+      --shadow-soft:0 10px 30px rgba(0,0,0,0.12);
+      --shadow:0 20px 60px rgba(0,0,0,0.18);
+      --radius-xl:22px;
+      --radius-lg:18px;
+      --max:1080px;
+      --focusRing:0 0 0 3px rgba(255,255,255,0.22), 0 0 0 1px rgba(31,27,46,0.35) inset;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:"Onest",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.35;
+    }
+
+    /* Hide scrollbar but keep scroll */
+    html,body{overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-ms-overflow-style:none;}
+    body::-webkit-scrollbar{display:none;}
+
+    a{color:inherit;text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .wrap{max-width:var(--max);margin:0 auto;padding:18px 18px 56px;}
+
+    /* Full-bleed header */
+    .topbar{
+      position:sticky;top:0;z-index:30;
+      padding:18px 28px;
+      background:linear-gradient(to bottom, rgba(159,135,195,0.92), rgba(159,135,195,0.68), rgba(159,135,195,0));
+      backdrop-filter:blur(10px);
+    }
+    @media (max-width:720px){.topbar{padding:16px 16px;}}
+    .header{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brandName{font-weight:700;letter-spacing:0.14em;font-size:0.95rem;user-select:none;}
+
+    .menuBtn{
+      appearance:none;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(31,27,46,0.14);backdrop-filter:blur(8px);
+      color:var(--text);border-radius:14px;padding:10px 12px;cursor:pointer;
+      transition:transform 140ms ease, background 140ms ease;
+      display:flex;align-items:center;gap:10px;
+    }
+    .menuBtn:hover{transform:translateY(-1px);background:rgba(31,27,46,0.18);}
+    .menuBtn:active{transform:translateY(0);}
+    .menuBtn:focus-visible{outline:none;box-shadow:var(--focusRing);}
+    .hamburger{width:18px;height:12px;position:relative;display:inline-block;}
+    .hamburger span{position:absolute;left:0;right:0;height:2px;border-radius:2px;background:rgba(255,255,255,0.90);}
+    .hamburger span:nth-child(1){top:0;}
+    .hamburger span:nth-child(2){top:5px;opacity:0.85;}
+    .hamburger span:nth-child(3){bottom:0;opacity:0.7;}
+
+    /* Menu overlay */
+    .menuOverlay[hidden]{display:none;}
+    .menuOverlay{position:fixed;inset:0;z-index:60;background:rgba(18,14,30,0.52);backdrop-filter:blur(8px);padding:18px;}
+    .menuPanel{max-width:520px;margin:10vh auto 0;border-radius:var(--radius-xl);background:rgba(31,27,46,0.80);border:1px solid rgba(255,255,255,0.16);box-shadow:var(--shadow);overflow:hidden;}
+    .menuHead{display:flex;align-items:center;justify-content:space-between;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,0.10);}
+    .menuHead .title{font-weight:650;letter-spacing:0.2px;}
+    .iconBtn{appearance:none;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.10);color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer;transition:background 140ms ease,transform 140ms ease;}
+    .iconBtn:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px);}
+    .iconBtn:active{transform:translateY(0);}
+    .iconBtn:focus-visible{outline:none;box-shadow:var(--focusRing);}
+    .menuBody{padding:12px;}
+    .menuList{display:grid;gap:10px;}
+    .menuItem{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);transition:transform 140ms ease, background 140ms ease, border-color 140ms ease;}
+    .menuItem:hover{transform:translateY(-1px);background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);text-decoration:none;}
+    .menuItem .hint{color:var(--muted-2);font-size:0.92rem;}
+
+    /* UI blocks */
+    .card{border-radius:var(--radius-xl);background:var(--glass);border:1px solid var(--stroke);box-shadow:var(--shadow-soft);overflow:hidden;}
+    .cardHeader{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.10);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .cardHeader .h{margin:0;font-weight:650;letter-spacing:0.2px;font-size:1.02rem;}
+    .cardBody{padding:14px 16px 16px;}
+    .muted{color:var(--muted);}
+    .muted2{color:var(--muted-2);}
+
+    .btn{
+      appearance:none;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.12);color:var(--text);
+      border-radius:14px;padding:10px 12px;cursor:pointer;
+      transition:transform 140ms ease, background 140ms ease;
+      font-weight:600;letter-spacing:0.2px;text-decoration:none;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      white-space:nowrap;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,0.14);text-decoration:none;}
+    .btn:active{transform:translateY(0);}
+    .btn:focus-visible{outline:none;box-shadow:var(--focusRing);}
+    .btn.primary{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.22);}
+    .btn.ghost{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.14);}
+
+    .hr{height:1px;background:rgba(255,255,255,0.10);margin:12px 0;}
+
+    .grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:14px;margin-top:14px;}
+    @media (max-width:920px){.grid{grid-template-columns:1fr;}}
+
+    .backRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0 0;}
+    .backLink{display:inline-flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.10);transition:transform 140ms ease, background 140ms ease;}
+    .backLink:hover{transform:translateY(-1px);background:rgba(255,255,255,0.12);text-decoration:none;}
+    .backLink:focus-visible{outline:none;box-shadow:var(--focusRing);}
+    .arrow{width:18px;height:18px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.12);}
+
+    .pillRow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.08);font-size:0.92rem;}
+    .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.65);box-shadow:0 0 0 2px rgba(255,255,255,0.10);}
+    .badge[data-status="assigned"] .dot{background:rgba(135,206,250,0.95);}
+    .badge[data-status="queued"] .dot{background:rgba(255,215,0,0.95);}
+
+    label{display:block;font-size:0.90rem;color:var(--muted);margin-bottom:6px;}
+    input,textarea,select{
+      width:100%;
+      border-radius:14px;border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.10);color:var(--text);
+      padding:10px 12px;outline:none;
+      transition:box-shadow 140ms ease, border-color 140ms ease, background 140ms ease;
+      font:inherit;
+    }
+    textarea{resize:vertical;min-height:110px;}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.55);}
+    input:focus,textarea:focus,select:focus{box-shadow:var(--focusRing);border-color:rgba(255,255,255,0.24);background:rgba(255,255,255,0.12);}
+    .formRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media (max-width:720px){.formRow{grid-template-columns:1fr;}}
+
+    .radioGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    @media (max-width:720px){.radioGrid{grid-template-columns:1fr;}}
+    .choice{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:transform 140ms ease, background 140ms ease, border-color 140ms ease;}
+    .choice:hover{transform:translateY(-1px);background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);}
+    .choice input{width:18px;height:18px;margin-top:2px;}
+    .choice .t{font-weight:650;letter-spacing:0.2px;}
+    .choice .d{color:var(--muted);font-size:0.92rem;margin-top:4px;}
+
+    .evidence{display:grid;gap:10px;}
+    .eItem{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .eItem .name{font-weight:650;letter-spacing:0.2px;}
+    .eItem .url{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:0.92rem;color:rgba(255,255,255,0.86);word-break:break-word;margin-top:6px;}
+    .eItem .meta{color:var(--muted-2);font-size:0.90rem;}
+    .eItem a{text-decoration:underline;text-decoration-color:rgba(255,255,255,0.30);}
+
+    .log{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
+    .logItem{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .logItem .msg{color:rgba(255,255,255,0.90);}
+    .logItem .ts{color:var(--muted-2);font-size:0.90rem;white-space:nowrap;}
+
+    .note{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;color:rgba(255,255,255,0.90);font-size:0.92rem;}
+
+    .srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <header class="header" aria-label="SkillSwap header">
+      <div class="brandName">SKILLSWAP</div>
+<div id="creditsMount"></div>
+
+      <button class="menuBtn" id="menuButton" type="button"
+        aria-haspopup="dialog" aria-controls="menuOverlay" aria-expanded="false">
+        <span class="srOnly">Open menu</span>
+        <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </header>
+  </div>
+
+  <div class="menuOverlay" id="menuOverlay" hidden role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="menuPanel" role="document">
+      <div class="menuHead">
+        <div class="title">Menu</div>
+        <button class="iconBtn" id="menuClose" type="button">Close</button>
+      </div>
+      <div class="menuBody">
+        <nav class="menuList" aria-label="Primary">
+          <a class="menuItem" href="home.html"><span>Portfolio Home</span><span class="hint">home.html</span></a>
+          <a class="menuItem" href="project-details.html"><span>Project</span><span class="hint">project-details.html</span></a>
+          <a class="menuItem" href="index.html"><span>Landing</span><span class="hint">index.html</span></a>
+          <a class="menuItem" href="login.html"><span>Login</span><span class="hint">login.html</span></a>
+        </nav>
+        <div class="hr"></div>
+        <div class="muted2" style="font-size:0.92rem;">Demo user: Alex Morgan — Frontend Developer</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="backRow">
+      <a class="backLink" href="project-details.html" aria-label="Back to project">
+        <span class="arrow" aria-hidden="true">←</span>
+        <span>Back</span>
+      </a>
+      <div class="muted2" style="font-size:0.92rem;">Validation details</div>
+    </div>
+
+    <section class="card" aria-label="Review request summary" style="margin-top:12px;">
+      <div class="cardHeader">
+        <div>
+          <h1 class="h" style="font-size:1.18rem;">Open review</h1>
+          <div class="pillRow">
+            <span class="badge" id="queueBadge" data-status="queued">
+              <span class="dot" aria-hidden="true"></span>
+              <span id="queueText">Queued</span>
+            </span>
+            <span class="badge"><span class="muted2">Project</span><span id="projectTitle">E-Commerce Dashboard</span></span>
+            <span class="badge"><span class="muted2">Checkpoint</span><span id="checkpointText">CP2 (verification checkpoint)</span></span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+          <button class="btn ghost" id="toggleQueueBtn" type="button">Toggle assigned/queued</button>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <div class="note">
+          This page shows the request context + evidence + system activity. The reviewer submits the rubric on a separate page via an invite link.
+        </div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <div style="display:grid; gap:14px;">
+        <section class="card" aria-label="Request details">
+          <div class="cardHeader">
+            <h2 class="h">Request details</h2>
+            <div class="muted2" style="font-size:0.92rem;">Peer vs High-rep verifier</div>
+          </div>
+
+          <div class="cardBody">
+            <form id="requestForm" style="display:grid; gap:12px;">
+              <div class="radioGrid" role="radiogroup" aria-label="Reviewer type">
+                <label class="choice" for="rtPeer">
+                  <input id="rtPeer" name="reviewerType" type="radio" value="peer" checked />
+                  <div>
+                    <div class="t">Peer reviewer</div>
+                    <div class="d">Low/medium weight. Can give feedback; may not be eligible to approve CP2 as Verified.</div>
+                  </div>
+                </label>
+
+                <label class="choice" for="rtHighRep">
+                  <input id="rtHighRep" name="reviewerType" type="radio" value="highrep" />
+                  <div>
+                    <div class="t">High-rep verifier / Mentor</div>
+                    <div class="d">High weight. Eligible to approve CP2 (verification checkpoint) if evidence is present.</div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="formRow">
+                <div>
+                  <label for="checkpointPick">Checkpoint to review</label>
+                  <select id="checkpointPick" name="checkpointPick">
+                    <option value="cp1">CP1 (early feedback)</option>
+                    <option value="cp2" selected>CP2 (verification checkpoint)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="priorityPick">Queue</label>
+                  <select id="priorityPick" name="priorityPick">
+                    <option value="standard" selected>Standard</option>
+                    <option value="priority">Priority (credits)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label for="requestNote">Request note (optional)</label>
+                <textarea id="requestNote" name="requestNote" placeholder="What should the reviewer focus on? (1-3 lines)"></textarea>
+              </div>
+
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn primary" id="requestBtn" type="submit">Request review</button>
+                <button class="btn ghost" id="resetRequestBtn" type="button">Reset</button>
+              </div>
+
+              <div class="muted2" style="font-size:0.92rem;">
+                Anti-fake rule: evidence required for CP2 “Verified” approval. Conflict rule: no self-review; avoid repeating same reviewer (placeholder in MVP).
+              </div>
+            </form>
+
+            <div class="note" id="inviteBox" hidden style="margin-top:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                <div style="font-weight:650; letter-spacing:0.2px;">Reviewer invite link</div>
+                <div class="muted2" style="font-size:0.92rem;">Share this with the reviewer</div>
+              </div>
+              <div class="hr"></div>
+
+              <div class="muted2" style="font-size:0.92rem;">URL</div>
+              <div id="inviteUrl" style="margin-top:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; word-break:break-all;"></div>
+
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                <button class="btn" id="copyInviteBtn" type="button">Copy link</button>
+                <a class="btn primary" id="openInviteBtn" href="review-submission.html">Open reviewer page</a>
+              </div>
+
+              <div class="muted2" style="font-size:0.92rem; margin-top:10px;">
+                Demo note: reviewer page reads the request by ID from localStorage.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-label="Evidence (reviewer sees)">
+          <div class="cardHeader">
+            <h2 class="h">Evidence (reviewer sees)</h2>
+            <div class="muted2" style="font-size:0.92rem;">Git / Figma / Demo</div>
+          </div>
+
+          <div class="cardBody">
+            <div class="evidence">
+              <div class="eItem">
+                <div>
+                  <div class="name">Git repo</div>
+                  <div class="url" id="evRepo">https://github.com/skillswap/demo-ecom-dashboard</div>
+                  <div class="meta">Required for Verified</div>
+                </div>
+                <div class="meta"><a href="https://github.com/skillswap/demo-ecom-dashboard" target="_blank" rel="noreferrer">Open</a></div>
+              </div>
+
+              <div class="eItem">
+                <div>
+                  <div class="name">Figma</div>
+                  <div class="url" id="evFigma">https://figma.com/file/skillswap-ecom-dashboard</div>
+                  <div class="meta">Required for Verified</div>
+                </div>
+                <div class="meta"><a href="https://figma.com/file/skillswap-ecom-dashboard" target="_blank" rel="noreferrer">Open</a></div>
+              </div>
+
+              <div class="eItem">
+                <div>
+                  <div class="name">Demo</div>
+                  <div class="url" id="evDemo">https://demo.skillswap.com/ecom-dashboard</div>
+                  <div class="meta">Required for Verified</div>
+                </div>
+                <div class="meta"><a href="https://demo.skillswap.com/ecom-dashboard" target="_blank" rel="noreferrer">Open</a></div>
+              </div>
+            </div>
+
+            <div class="hr"></div>
+            <div class="muted2" style="font-size:0.92rem;">
+              Later: show checkpoint snapshot + short activity-trail summary.
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside style="display:grid; gap:14px;">
+        <section class="card" aria-label="System activity log">
+          <div class="cardHeader">
+            <h2 class="h">System Activity</h2>
+            <button class="btn ghost" id="clearLogBtn" type="button">Clear</button>
+          </div>
+
+          <div class="cardBody">
+            <ul class="log" id="activityLog" aria-label="Activity entries">
+              <li class="logItem"><div class="msg">Opened validation details.</div><div class="ts" data-ts></div></li>
+              <li class="logItem"><div class="msg">Evidence links available.</div><div class="ts" data-ts></div></li>
+            </ul>
+
+            <div class="hr"></div>
+            <div class="muted2" style="font-size:0.92rem;">
+              Front-end only; later persists and appears on Home validation list.
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // Menu controller (ONE)
+    (function(){
+      const menuButton = document.getElementById('menuButton');
+      const menuOverlay = document.getElementById('menuOverlay');
+      const menuClose = document.getElementById('menuClose');
+      let lastFocusEl = null;
+
+      function openMenu(){
+        lastFocusEl = document.activeElement;
+        menuOverlay.hidden = false;
+        menuButton.setAttribute('aria-expanded','true');
+        menuClose.focus();
+      }
+      function closeMenu(){
+        menuOverlay.hidden = true;
+        menuButton.setAttribute('aria-expanded','false');
+        if (lastFocusEl && typeof lastFocusEl.focus === 'function') lastFocusEl.focus();
+      }
+
+      menuButton.addEventListener('click', () => menuOverlay.hidden ? openMenu() : closeMenu());
+      menuOverlay.addEventListener('click', (e) => {
+        const panel = menuOverlay.querySelector('.menuPanel');
+        if (!panel.contains(e.target)) closeMenu();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !menuOverlay.hidden) closeMenu();
+      });
+      // close button is optional in this simplified menu (if you add it)
+      if (menuClose) menuClose.addEventListener('click', closeMenu);
+    })();
+
+    function pad2(n){ return String(n).padStart(2,'0'); }
+    function nowStamp(){
+      const d = new Date();
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    }
+    function seedTimestamps(){
+      document.querySelectorAll('[data-ts]').forEach((el, idx) => {
+        const d = new Date(Date.now() - (idx * 1000 * 60 * 7));
+        el.textContent = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      });
+    }
+    seedTimestamps();
+
+    function addLog(message){
+      const log = document.getElementById('activityLog');
+      const li = document.createElement('li');
+      li.className = 'logItem';
+      li.innerHTML = `<div class="msg"></div><div class="ts"></div>`;
+      li.querySelector('.msg').textContent = message;
+      li.querySelector('.ts').textContent = nowStamp();
+      log.prepend(li);
+    }
+
+    // Queue badge
+    const queueBadge = document.getElementById('queueBadge');
+    const queueText = document.getElementById('queueText');
+    const state = { queue: 'queued' };
+
+    function renderQueue(){
+      queueBadge.setAttribute('data-status', state.queue);
+      queueText.textContent = state.queue === 'assigned' ? 'Assigned' : 'Queued';
+    }
+    renderQueue();
+
+    document.getElementById('toggleQueueBtn').addEventListener('click', () => {
+      state.queue = state.queue === 'queued' ? 'assigned' : 'queued';
+      renderQueue();
+      addLog(`Queue status changed: ${state.queue}.`);
+    });
+
+    document.getElementById('clearLogBtn').addEventListener('click', () => {
+      document.getElementById('activityLog').innerHTML = '';
+      addLog('System log cleared.');
+    });
+
+    // Request -> generates reviewer invite link + stores payload
+    const REQUEST_KEY_PREFIX = 'ss_review_request_';
+
+    function newRid(){
+      // simple deterministic-ish id for MVP
+      return 'R' + Date.now().toString(36).toUpperCase();
+    }
+
+    function buildInviteUrl(rid){
+      const url = new URL(window.location.href);
+      url.pathname = url.pathname.replace(/validation-details\.html?$/i, 'review-submission.html');
+      url.search = '';
+      url.searchParams.set('rid', rid); // query param used to load request [web:119]
+      return url.toString();
+    }
+
+    async function copyText(text){
+      // Clipboard API works on HTTPS/localhost; fallback to prompt [web:125]
+      try{
+        await navigator.clipboard.writeText(text);
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+
+    function setCheckpointBadgeText(cp){
+      const el = document.getElementById('checkpointText');
+      el.textContent = cp === 'cp2' ? 'CP2 (verification checkpoint)' : 'CP1 (early feedback)';
+    }
+
+    const form = document.getElementById('requestForm');
+    const inviteBox = document.getElementById('inviteBox');
+    const inviteUrlEl = document.getElementById('inviteUrl');
+    const copyInviteBtn = document.getElementById('copyInviteBtn');
+    const openInviteBtn = document.getElementById('openInviteBtn');
+    const resetBtn = document.getElementById('resetRequestBtn');
+    const checkpointPick = document.getElementById('checkpointPick');
+
+    form.addEventListener('change', () => setCheckpointBadgeText(checkpointPick.value));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      // If priority selected, require spend
+if (document.getElementById('priorityPick')?.value === 'priority') {
+  const balKey = 'ss_credits_balance';
+  const cost = 5;
+
+  const bal = Number(localStorage.getItem(balKey) || '20');
+  if (bal < cost) {
+    alert('Not enough credits for Priority review.');
+    return; // stop the request
+  }
+
+  localStorage.setItem(balKey, String(bal - cost)); // deduct [web:271]
+}
+
+
+      const rid = newRid();
+      const reviewerType = form.querySelector('input[name="reviewerType"]:checked')?.value || 'peer';
+      const checkpoint = document.getElementById('checkpointPick').value;
+      const priority = document.getElementById('priorityPick').value;
+      const note = document.getElementById('requestNote').value.trim();
+
+      // store request payload
+      const payload = {
+        rid,
+        createdAt: nowStamp(),
+        projectTitle: document.getElementById('projectTitle').textContent,
+        reviewerType,
+        checkpoint,
+        priority,
+        queue: state.queue,
+        note,
+        evidence: {
+          repo: document.getElementById('evRepo').textContent.trim(),
+          figma: document.getElementById('evFigma').textContent.trim(),
+          demo: document.getElementById('evDemo').textContent.trim()
+        }
+      };
+      payload.prioritySpent = !!window.__ssPrioritySpent;
+payload.priorityCost = 5;
+
+      localStorage.setItem(REQUEST_KEY_PREFIX + rid, JSON.stringify(payload)); // store object via JSON [web:174]
+
+      const inviteUrl = buildInviteUrl(rid);
+      inviteUrlEl.textContent = inviteUrl;
+      openInviteBtn.href = inviteUrl;
+
+      inviteBox.hidden = false;
+      addLog(`Review requested (${checkpoint.toUpperCase()}, ${reviewerType}, ${priority}, ${state.queue}).`);
+      addLog(`Invite generated: ${rid}.`);
+
+      // copy immediately (nice for demo)
+      const ok = await copyText(inviteUrl);
+      if (ok){
+        copyInviteBtn.textContent = 'Copied';
+        setTimeout(() => (copyInviteBtn.textContent = 'Copy link'), 900);
+        addLog('Invite link copied.');
+      }
+    });
+
+    copyInviteBtn.addEventListener('click', async () => {
+      const link = inviteUrlEl.textContent.trim();
+      if (!link) return;
+
+      const ok = await copyText(link);
+      if (ok){
+        copyInviteBtn.textContent = 'Copied';
+        setTimeout(() => (copyInviteBtn.textContent = 'Copy link'), 900);
+        addLog('Invite link copied.');
+      }else{
+        addLog('Copy failed; manual copy needed.');
+        prompt('Copy this reviewer link:', link);
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      form.reset();
+      inviteBox.hidden = true;
+      setCheckpointBadgeText('cp2');
+      addLog('Request form reset.');
+    });
+    (function(){
+  const START = 20;
+  const KEY = 'ss_credits_balance';
+
+  // 1) make sure credits exist
+  if (!localStorage.getItem(KEY)) localStorage.setItem(KEY, String(START));
+
+  // 2) find the placeholder we added
+  const mount = document.getElementById('creditsMount');
+  if (!mount) return;
+
+  // 3) create the button
+  const btn = document.createElement('button');
+  btn.className = 'btn ghost';
+  btn.type = 'button';
+
+  function render(){
+    btn.textContent = 'Credits: ' + localStorage.getItem(KEY);
+  }
+  render();
+
+  btn.onclick = () => alert('Credits balance: ' + localStorage.getItem(KEY));
+  mount.appendChild(btn);
+})();
+/* ===== Drop-in: keep Credits button in sync ===== */
+(function () {
+  function getBal() {
+    return localStorage.getItem('ss_credits_balance') || '20';
+  }
+
+  function refreshCreditsUI() {
+    const btn = document.getElementById('creditsBtn'); // your injected button id
+    if (!btn) return;
+    btn.textContent = 'Credits: ' + getBal(); // update visible text [web:321]
+  }
+
+  // 1) Update on load
+  refreshCreditsUI();
+
+  // 2) Update whenever "Request review" is submitted
+  const form = document.getElementById('requestForm');
+  if (form) {
+    form.addEventListener('submit', () => {
+      // wait a tick so your deduction code runs first
+      setTimeout(refreshCreditsUI, 0);
+    }); // submit event fires when form submits [web:311]
+  }
+
+  // 3) Optional: if you have a "Confirm spend" button too, refresh after it
+  document.addEventListener('click', (e) => {
+    const isConfirm = e.target && (e.target.id === 'confirmSpendBtn' || e.target.id === 'confirmSpendBtnAddon');
+    if (isConfirm) setTimeout(refreshCreditsUI, 0);
+  });
+})();
+
+
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillSwap - Portfolio Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ---- Tokens (from homepage) ---- */
+    :root {
+      --bg: #9F87C3;
+      --font: "Onest", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      --px: clamp(18px, 3vw, 80px);
+      --r-sm: 10px;
+      --r-md: 18px;
+      --w-94: rgba(255,255,255,0.94);
+      --w-86: rgba(255,255,255,0.86);
+      --w-78: rgba(255,255,255,0.78);
+      --w-70: rgba(255,255,255,0.70);
+      --w-55: rgba(255,255,255,0.55);
+      --ink: #1F1B2E;
+      --shadow: 0 18px 40px rgba(0,0,0,0.18);
+      --shadow-strong: 0 26px 70px rgba(0,0,0,0.22);
+    }
+
+    /* ---- Base ---- */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--w-94);
+      overflow-x: hidden;
+      text-rendering: geometricPrecision;
+    }
+
+    /* Background glow */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -120px;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(900px 600px at 76% 18%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(900px 620px at 20% 14%, rgba(0,0,0,.10), transparent 62%);
+    }
+
+    a { color: inherit; }
+
+    /* Skip link */
+    .skip {
+      position: absolute;
+      left: -9999px;
+      top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      text-decoration: none;
+    }
+    .skip:focus { left: 12px; z-index: 9999; }
+
+    /* ---- Header (topbar) ---- */
+    .topbar {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding-left: var(--px);
+      padding-right: var(--px);
+      padding-top: 18px;
+      padding-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 900;
+      text-decoration: none;
+      color: var(--w-86);
+    }
+
+    .menuBtn {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    .menuIcon,
+    .menuIcon::before,
+    .menuIcon::after {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      position: relative;
+    }
+    .menuIcon::before { position: absolute; top: -6px; left: 0; }
+    .menuIcon::after { position: absolute; top: 6px; left: 0; }
+
+    /* ---- Menu overlay ---- */
+    .menuOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 8, 16, 0.40);
+      z-index: 9999;
+      display: none;
+    }
+
+    .menuOverlay:not([hidden]) {
+      display: grid;
+      place-items: start end;
+      padding: 16px;
+    }
+
+    .menuOverlay[hidden] {
+      display: none !important;
+    }
+
+    .menuPanel {
+      width: min(380px, 92vw);
+      border-radius: 18px;
+      background: rgba(31, 27, 46, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow: var(--shadow-strong);
+      padding: 14px;
+      max-width: 100vw;
+      overflow-x: hidden;
+      overflow-y: auto;
+      pointer-events: auto;
+    }
+
+    .menuClose {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.10);
+      color: var(--w-94);
+      padding: 10px 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .menuList {
+      list-style: none;
+      padding: 10px 0 6px;
+      margin: 0;
+    }
+    .menuList a {
+      display: block;
+      padding: 10px 10px;
+      border-radius: 10px;
+      color: var(--w-86);
+      text-decoration: none;
+    }
+    .menuList a:hover { background: rgba(255,255,255,0.08); }
+
+    .menuCta {
+      display: flex;
+      gap: 10px;
+      padding-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ---- Scrollbar hide ---- */
+    * {
+      scrollbar-width: none;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    html, body {
+      overflow-y: auto;
+    }
+
+    /* ---- Main Content ---- */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: var(--px);
+      padding-right: var(--px);
+      padding-top: 32px;
+      padding-bottom: 72px;
+    }
+
+    /* ---- Profile Snapshot ---- */
+    .profileSnapshot {
+      background: rgba(31, 27, 46, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .profileInfo h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--w-94);
+    }
+
+    .profileRole {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--w-78);
+      margin-bottom: 8px;
+    }
+
+    .profileStrength {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--w-70);
+    }
+
+    .strengthBar {
+      display: flex;
+      gap: 2px;
+    }
+
+    .strengthStar {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .strengthStar.filled {
+      background: #FFD700;
+    }
+
+    .profileActions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
+      transition: all 180ms ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn.primary {
+      background: var(--ink);
+      color: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.28);
+    }
+
+    .btn.ghost {
+      background: rgba(31, 27, 46, 0.14);
+      color: var(--w-86);
+      border: 1px solid rgba(31, 27, 46, 0.22);
+    }
+
+    .btn.ghost:hover {
+      transform: translateY(-1px);
+      background: rgba(31, 27, 46, 0.18);
+    }
+
+    /* ---- Section Header ---- */
+    .sectionHeader {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .sectionTitle {
+      margin: 0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--w-86);
+      font-weight: 900;
+    }
+
+    .sectionSub {
+      margin: 0;
+      font-size: 12px;
+      color: var(--w-70);
+    }
+
+    /* ---- Proof of Work Section ---- */
+    .proofSection {
+      margin-bottom: 56px;
+    }
+
+    .projectsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .projectCard {
+      background: rgba(21, 18, 34, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 220ms ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .projectCard::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        radial-gradient(300px 200px at 20% 10%, rgba(255,255,255,0.08), transparent 60%),
+        radial-gradient(300px 200px at 90% 20%, rgba(159,135,195,0.15), transparent 55%);
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .projectCard > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .projectCard:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .projectHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .projectTitle {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--w-94);
+    }
+
+    .statusBadge {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .statusBadge.progress {
+      background: rgba(255, 193, 7, 0.15);
+      color: #FFC107;
+      border: 1px solid rgba(255, 193, 7, 0.30);
+    }
+
+    .statusBadge.review {
+      background: rgba(33, 150, 243, 0.15);
+      color: #2196F3;
+      border: 1px solid rgba(33, 150, 243, 0.30);
+    }
+
+    .statusBadge.verified {
+      background: rgba(76, 175, 80, 0.15);
+      color: #4CAF50;
+      border: 1px solid rgba(76, 175, 80, 0.30);
+    }
+
+    .projectDesc {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.72);
+      line-height: 1.45;
+    }
+
+    .projectMeta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.60);
+    }
+
+    /* ---- Discovery Section ---- */
+    .discoverySection {
+      margin-bottom: 56px;
+    }
+
+    .trackGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .trackCard {
+      background: rgba(21, 18, 34, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+
+    .trackCard:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.20);
+      background: rgba(31, 27, 46, 0.72);
+    }
+
+    .trackIcon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .trackName {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--w-94);
+    }
+
+    /* ---- Skill Activity Section ---- */
+    .activitySection {
+      margin-bottom: 56px;
+    }
+
+    .activityFeed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .activityItem {
+      background: rgba(31, 27, 46, 0.40);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 13px;
+      color: var(--w-78);
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .activityItem:hover {
+      background: rgba(31, 27, 46, 0.55);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .activityTime {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    /* ---- Validation Section ---- */
+    .validationSection {
+      margin-bottom: 40px;
+    }
+
+    .validationList {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .validationItem {
+      background: rgba(31, 27, 46, 0.40);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .validationItem:hover {
+      background: rgba(31, 27, 46, 0.55);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .validationHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .reviewerName {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--w-94);
+    }
+
+    .reviewerType {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.60);
+      background: rgba(159, 135, 195, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .reviewFeedback {
+      font-size: 12px;
+      color: var(--w-78);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .profileSnapshot {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .profileActions {
+        width: 100%;
+      }
+
+      .btn {
+        flex: 1;
+      }
+
+      .projectsGrid {
+        grid-template-columns: 1fr;
+      }
+
+      .trackGrid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sectionHeader {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">Skip to main</a>
+
+  <!-- Header -->
+  <header class="topbar">
+    <a href="index.html" class="brand">SkillSwap</a>
+    <button class="menuBtn" id="menuToggle" aria-label="Open menu">
+      <div class="menuIcon"></div>
+    </button>
+  </header>
+
+  <!-- Menu Overlay -->
+  <div class="menuOverlay" id="menuOverlay" hidden>
+    <div class="menuPanel">
+      <button class="menuClose" id="menuClose">Close</button>
+      <ul class="menuList">
+        <li><a href="home.html">Portfolio</a></li>
+        <li><a href="#profile">Profile</a></li>
+        <li><a href="#settings">Settings</a></li>
+        <li><a href="index.html">Log Out</a></li>
+        <li><a href="learn-request.html">Learn (Request session)</a></li>
+<li><a href="teach-session.html">Teach (Inbox)</a></li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main id="main" class="container">
+
+    <!-- 1. Profile Snapshot -->
+    <section class="profileSnapshot">
+      <div class="profileInfo">
+        <h2>Ram Sathwik</h2>
+        <div class="profileRole">Frontend Developer</div>
+        <div class="profileStrength">
+          <span>Portfolio Strength:</span>
+          <div class="strengthBar">
+            <div class="strengthStar filled"></div>
+            <div class="strengthStar filled"></div>
+            <div class="strengthStar filled"></div>
+            <div class="strengthStar"></div>
+            <div class="strengthStar"></div>
+          </div>
+          <span>3/5</span>
+        </div>
+      </div>
+      <div class="profileActions">
+        <button class="btn primary">Add Project</button>
+        <button class="btn ghost">Copy Link</button>
+      </div>
+    </section>
+
+    <!-- 2. Proof of Work -->
+    <section class="proofSection">
+      <div class="sectionHeader">
+        <h3 class="sectionTitle">Proof of Work</h3>
+        <p class="sectionSub">2 verified • 1 in review</p>
+      </div>
+      
+      <div class="projectsGrid">
+        <!-- Project 1 -->
+        <div class="projectCard" onclick="navigateTo('project-details.html')">
+          <div class="projectHeader">
+            <h4 class="projectTitle">E-Commerce Dashboard</h4>
+            <span class="statusBadge verified">Verified</span>
+          </div>
+          <p class="projectDesc">Built a React-based analytics dashboard with real-time data visualization.</p>
+          <div class="projectMeta">
+            <span>Last updated: 2 days ago</span>
+            <span>✓ Verified</span>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="projectCard" onclick="navigateTo('project-details.html')">
+          <div class="projectHeader">
+            <h4 class="projectTitle">Design System</h4>
+            <span class="statusBadge verified">Verified</span>
+          </div>
+          <p class="projectDesc">Comprehensive Figma design system with 200+ components and documentation.</p>
+          <div class="projectMeta">
+            <span>Last updated: 5 days ago</span>
+            <span>✓ Verified</span>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="projectCard" onclick="navigateTo('project-details.html')">
+          <div class="projectHeader">
+            <h4 class="projectTitle">Mobile App Redesign</h4>
+            <span class="statusBadge review">In Review</span>
+          </div>
+          <p class="projectDesc">Complete redesign of mobile app UI/UX with improved user flows.</p>
+          <div class="projectMeta">
+            <span>Last updated: Today</span>
+            <span>Awaiting verification...</span>
+          </div>
+        </div>
+
+        <!-- Add Project Card -->
+        <div class="projectCard" style="background: rgba(159, 135, 195, 0.15); border: 1px dashed rgba(255, 255, 255, 0.20); display: flex; align-items: center; justify-content: center; min-height: 140px;" onclick="alert('Add project functionality coming soon!')">
+          <div style="text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 8px;">+</div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--w-78);">Add New Project</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Discovery (Tracks) -->
+    <section class="discoverySection">
+      <div class="sectionHeader">
+        <h3 class="sectionTitle">Discovery</h3>
+        <p class="sectionSub">Explore tracks & start a project</p>
+      </div>
+
+      <div class="trackGrid">
+        <div class="trackCard" onclick="navigateTo('track-details.html')">
+          <div class="trackIcon">⚛️</div>
+          <h4 class="trackName">Frontend</h4>
+        </div>
+        <div class="trackCard" onclick="navigateTo('track-details.html')">
+          <div class="trackIcon">🎨</div>
+          <h4 class="trackName">Design</h4>
+        </div>
+        <div class="trackCard" onclick="navigateTo('track-details.html')">
+          <div class="trackIcon">📊</div>
+          <h4 class="trackName">Data</h4>
+        </div>
+        <div class="trackCard" onclick="navigateTo('track-details.html')">
+          <div class="trackIcon">🔧</div>
+          <h4 class="trackName">Backend</h4>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Skill Activity -->
+    <section class="activitySection">
+      <div class="sectionHeader">
+        <h3 class="sectionTitle">Skill Activity</h3>
+        <p class="sectionSub">12 sessions • 24 hours</p>
+      </div>
+
+      <div class="activityFeed">
+        <div class="activityItem">
+          <div> Iteration 3 on "E-Commerce Dashboard" - Updated charts & filters</div>
+          <div class="activityTime">2 hours ago</div>
+        </div>
+        <div class="activityItem">
+          <div> Checkpoint 2 submitted for "Design System" review</div>
+          <div class="activityTime">1 day ago</div>
+        </div>
+        <div class="activityItem">
+          <div> Session completed: "React Performance Optimization" with Sam</div>
+          <div class="activityTime">2 days ago</div>
+        </div>
+        <div class="activityItem">
+          <div> Mentor feedback on "Mobile App Redesign" - 4.8/5 rating</div>
+          <div class="activityTime">3 days ago</div>
+        </div>
+        <div class="activityItem">
+          <div> Started track: "Advanced React Patterns"</div>
+          <div class="activityTime">5 days ago</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Validation (Trust) -->
+    <section class="validationSection">
+      <div class="sectionHeader">
+        <h3 class="sectionTitle">Validation</h3>
+        <p class="sectionSub">3 reviews • 2 mentors</p>
+      </div>
+
+      <div class="validationList">
+        <div class="validationItem" onclick="navigateTo('validation-details.html')">
+          <div class="validationHeader">
+            <div>
+              <div class="reviewerName">Jordan Chen</div>
+              <span class="reviewerType">High-Rep Verifier</span>
+            </div>
+            <span style="font-size: 18px;">⭐ 5.0</span>
+          </div>
+          <p class="reviewFeedback">"Exceptional work on the design system. Industry-standard documentation and component library."</p>
+        </div>
+
+        <div class="validationItem" onclick="navigateTo('validation-details.html')">
+          <div class="validationHeader">
+            <div>
+              <div class="reviewerName">Sarah Rivera</div>
+              <span class="reviewerType">Mentor</span>
+            </div>
+            <span style="font-size: 18px;">⭐ 4.8</span>
+          </div>
+          <p class="reviewFeedback">"Strong technical execution. Consider improving accessibility standards in next iteration."</p>
+        </div>
+
+        <div class="validationItem" onclick="navigateTo('validation-details.html')">
+          <div class="validationHeader">
+            <div>
+              <div class="reviewerName">Marcus Johnson</div>
+              <span class="reviewerType">Peer Reviewer</span>
+            </div>
+            <span style="font-size: 18px;">⭐ 4.5</span>
+          </div>
+          <p class="reviewFeedback">"Great project! Would love to see more documentation on the decision-making process."</p>
+        </div>
+
+        <div class="validationItem" style="background: rgba(159, 135, 195, 0.15); border: 1px dashed rgba(255, 255, 255, 0.20); cursor: pointer;" onclick="alert('Invite reviewer functionality coming soon!')">
+          <div style="text-align: center; padding: 12px 0;">
+            <div style="font-size: 20px; margin-bottom: 6px;">+</div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--w-78);">Invite Reviewer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const menuClose = document.getElementById('menuClose');
+
+    menuToggle.addEventListener('click', () => {
+      menuOverlay.removeAttribute('hidden');
+    });
+
+    menuClose.addEventListener('click', () => {
+      menuOverlay.setAttribute('hidden', '');
+    });
+
+    menuOverlay.addEventListener('click', (e) => {
+      if (e.target === menuOverlay) {
+        menuOverlay.setAttribute('hidden', '');
+      }
+    });
+
+    // Navigation
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+    
+  </script>
+</body>
+</html>

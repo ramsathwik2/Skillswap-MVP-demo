@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkillSwap — Session Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#9F87C3;
+      --glass:rgba(31,27,46,0.72);
+      --stroke:rgba(255,255,255,0.16);
+      --text:rgba(255,255,255,0.92);
+      --muted:rgba(255,255,255,0.70);
+      --shadow:0 26px 70px rgba(0,0,0,0.22);
+      --r:22px;
+      --focusRing:0 0 0 3px rgba(255,255,255,0.22), 0 0 0 1px rgba(31,27,46,0.35) inset;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:"Onest",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .shell{width:min(1180px, 96vw); display:grid; gap:14px;}
+    .stage{
+      border-radius:var(--r);
+      overflow:hidden;
+      background:rgba(15, 12, 26, 0.55);
+      border:1px solid rgba(255,255,255,0.14);
+      box-shadow:var(--shadow);
+      min-height:min(72vh, 680px);
+      position:relative;
+    }
+    video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      background:rgba(0,0,0,0.35);
+    }
+    .topOverlay{
+      position:absolute; inset:0 0 auto 0;
+      padding:14px 14px 10px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      background:linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0));
+      pointer-events:none;
+    }
+    .title{font-weight:700; letter-spacing:0.2px;}
+    .hint{font-size:0.92rem; color:var(--muted); margin-top:4px;}
+    .pill{
+      pointer-events:none;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.10);
+      color:rgba(255,255,255,0.86);
+      font-size:0.92rem;
+      display:inline-flex; align-items:center; gap:8px;
+      white-space:nowrap;
+    }
+    .dot{width:8px;height:8px;border-radius:50%; background:rgba(255,80,80,0.95); box-shadow:0 0 0 2px rgba(255,255,255,0.10);}
+    .dot.on{background:rgba(120,255,160,0.95);}
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:center;
+      padding:14px;
+      border-radius:var(--r);
+      background:var(--glass);
+      border:1px solid var(--stroke);
+      box-shadow:0 12px 30px rgba(0,0,0,0.12);
+    }
+    .btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.10);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      transition:transform 140ms ease, background 140ms ease, border-color 140ms ease;
+      font-weight:650;
+      letter-spacing:0.2px;
+      display:inline-flex; align-items:center; gap:10px;
+      white-space:nowrap;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px); background:rgba(255,255,255,0.12);}
+    .btn:active{transform:translateY(0);}
+    .btn:focus-visible{outline:none; box-shadow:var(--focusRing);}
+    .btn.primary{background:rgba(255,255,255,0.18); border-color:rgba(255,255,255,0.22);}
+    .btn.danger{background:rgba(255,80,80,0.18); border-color:rgba(255,120,120,0.22);}
+    .btn:disabled{opacity:0.55; cursor:not-allowed; transform:none;}
+    .card{
+      border-radius:var(--r);
+      background:var(--glass);
+      border:1px solid var(--stroke);
+      box-shadow:0 12px 30px rgba(0,0,0,0.12);
+      padding:12px 14px;
+      color:rgba(255,255,255,0.86);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
+  /* ===== SCALE FIX (override) ===== */
+
+/* Make the whole room smaller + more “Meet-like” */
+.shell{
+  width: min(980px, 94vw) !important;
+  gap: 12px !important;
+}
+
+/* Reduce the stage height so it doesn't feel fullscreen */
+.stage{
+  min-height: 420px !important;
+  height: min(52vh, 520px) !important;
+}
+
+/* Stop the camera feed from zooming/cropping */
+.stage video{
+  object-fit: contain !important;   /* was cover */
+  background: rgba(0,0,0,0.35) !important;
+}
+
+/* Slightly smaller overlay text */
+.title{ font-size: 14px !important; }
+.hint{ font-size: 12px !important; }
+/* ===== CAMERA FILL FIX (Meet-like) ===== */
+.stage video{
+  object-fit: cover !important;        /* fill the stage */
+  object-position: center 25% !important; /* crop a bit higher (keeps face centered) */
+}
+/* ===== SCALED ONLY (NO CROP / NO ZOOM) ===== */
+.stage video{
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;  /* scale to fit, preserve full frame */
+  object-position: center !important;
+  background: #12121a;             /* letterbox color */
+}
+
+
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="stage">
+      <video id="preview" autoplay playsinline muted></video>
+
+      <div class="topOverlay">
+        <div>
+          <div class="title">SkillSwap session</div>
+          <div class="hint">MVP: local device camera + recording (demo only).</div>
+        </div>
+        <div class="pill"><span id="liveDot" class="dot"></span><span id="liveText">Camera off</span></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn primary" id="startBtn" type="button">Start camera</button>
+      <button class="btn" id="toggleMicBtn" type="button" disabled>Mute mic</button>
+      <button class="btn" id="toggleCamBtn" type="button" disabled>Turn camera off</button>
+      <button class="btn" id="recordBtn" type="button" disabled>Start recording</button>
+      <button class="btn danger" id="stopBtn" type="button" disabled>End session</button>
+    </div>
+
+    <div class="card">
+      <div>
+        Proof: <span class="mono" id="proofText">No recording yet</span>
+      </div>
+      <button class="btn" id="saveProofBtn" type="button" disabled>Save proof</button>
+    </div>
+  </div>
+
+  <script>
+    // Uses getUserMedia for camera/mic [web:372]
+    // Uses MediaRecorder for recording [web:383]
+    const preview = document.getElementById('preview');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const toggleMicBtn = document.getElementById('toggleMicBtn');
+    const toggleCamBtn = document.getElementById('toggleCamBtn');
+    const recordBtn = document.getElementById('recordBtn');
+    const saveProofBtn = document.getElementById('saveProofBtn');
+
+    const liveDot = document.getElementById('liveDot');
+    const liveText = document.getElementById('liveText');
+    const proofText = document.getElementById('proofText');
+
+    let stream = null;
+    let recorder = null;
+    let chunks = [];
+    let recordingUrl = null;
+    let startedAt = null;
+
+    function stamp(){
+      const d = new Date();
+      const pad = (n)=>String(n).padStart(2,'0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function setLive(on){
+      liveDot.classList.toggle('on', on);
+      liveText.textContent = on ? 'Camera on' : 'Camera off';
+    }
+
+  async function startCamera(){
+  try{
+    // Prefer high-res; browser will fall back if not supported (ideal is safe) [web:494]
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: {
+        width:  { min: 640, ideal: 1920 },
+        height: { min: 360, ideal: 1080 },
+        frameRate: { ideal: 30, max: 60 }
+      }
+    }); // [web:372]
+
+    preview.srcObject = stream; // [web:384]
+    startedAt = stamp();
+    setLive(true);
+
+    // Optional: log actual active camera resolution/settings [web:501]
+    const vs = stream.getVideoTracks()[0]?.getSettings?.();
+    if (vs) console.log('Camera actual settings:', vs);
+
+    stopBtn.disabled = false;
+    toggleMicBtn.disabled = false;
+    toggleCamBtn.disabled = false;
+    recordBtn.disabled = false;
+    startBtn.disabled = true;
+  }catch(err){
+    console.error(err);
+    alert(`Camera/Mic permission failed: ${err.name}`);
+  }
+}
+
+function stopCamera(){
+  try{
+    // Stop all tracks properly [web:513]
+    if (stream){
+      stream.getTracks().forEach(t => t.stop()); // [web:516]
+    }
+  }finally{
+    stream = null;
+    preview.srcObject = null; // [web:513]
+    setLive(false);
+
+    stopBtn.disabled = true;
+    toggleMicBtn.disabled = true;
+    toggleCamBtn.disabled = true;
+    recordBtn.disabled = true;
+    startBtn.disabled = false;
+
+    toggleMicBtn.textContent = 'Mute mic';
+    toggleCamBtn.textContent = 'Turn camera off';
+  }
+}
+
+    function toggleMic(){
+      const track = stream?.getAudioTracks?.()[0];
+      if (!track) return;
+      track.enabled = !track.enabled;
+      toggleMicBtn.textContent = track.enabled ? 'Mute mic' : 'Unmute mic';
+    }
+
+    function toggleCam(){
+      const track = stream?.getVideoTracks?.()[0];
+      if (!track) return;
+      track.enabled = !track.enabled;
+      toggleCamBtn.textContent = track.enabled ? 'Turn camera off' : 'Turn camera on';
+      setLive(track.enabled);
+    }
+
+    function startRecording(){
+      if (!stream) return;
+
+      chunks = [];
+      const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+        ? 'video/webm;codecs=vp9'
+        : 'video/webm';
+
+      recorder = new MediaRecorder(stream, { mimeType: mime }); // [web:383]
+      recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: mime });
+        recordingUrl = URL.createObjectURL(blob);
+        proofText.textContent = 'Recording ready (download)';
+        saveProofBtn.disabled = false;
+
+        // auto-download for demo
+        const a = document.createElement('a');
+        a.href = recordingUrl;
+        a.download = `skillswap-session-${Date.now()}.webm`;
+        a.click();
+      };
+
+      recorder.start(250);
+      recordBtn.textContent = 'Stop recording';
+    }
+
+    function stopRecording(){
+      if (recorder && recorder.state !== 'inactive'){
+        recorder.stop();
+      }
+      recorder = null;
+      recordBtn.textContent = 'Start recording';
+    }
+
+    function saveProof(){
+      // front-end proof object for demo
+      const proof = {
+        id: 'proof_' + Date.now(),
+        createdAt: stamp(),
+        startedAt,
+        endedAt: stamp(),
+        hasRecording: !!recordingUrl
+      };
+      const key = 'ss_session_proofs';
+      const arr = JSON.parse(localStorage.getItem(key) || '[]');
+      arr.unshift(proof);
+      localStorage.setItem(key, JSON.stringify(arr));
+      proofText.textContent = `Saved proof: ${proof.id}`;
+    }
+
+    startBtn.addEventListener('click', startCamera);
+    stopBtn.addEventListener('click', () => {
+      if (recorder) stopRecording();
+      stopCamera();
+    });
+    toggleMicBtn.addEventListener('click', toggleMic);
+    toggleCamBtn.addEventListener('click', toggleCam);
+    recordBtn.addEventListener('click', () => {
+      if (!stream) return;
+      if (recorder) stopRecording(); else startRecording();
+    });
+    saveProofBtn.addEventListener('click', saveProof);
+    /* ===== DROP-IN: Fullscreen button (paste at end) ===== */
+(() => {
+  const controls = document.querySelector('.controls');
+  const stage = document.querySelector('.stage');
+  if (!controls || !stage) return;
+
+  // 1) Inject button into the controls row
+  controls.insertAdjacentHTML(
+    'beforeend',
+    `<button class="btn" id="fsBtn" type="button">Fullscreen</button>`
+  ); // [web:454]
+
+  const fsBtn = document.getElementById('fsBtn');
+
+  // 2) Toggle fullscreen on the stage
+  async function toggleFS() {
+    try {
+      if (!document.fullscreenElement) {
+        await stage.requestFullscreen(); // [web:531]
+      } else {
+        await document.exitFullscreen(); // [web:545]
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Fullscreen blocked by browser (try clicking the button again).');
+    }
+  }
+
+  fsBtn.addEventListener('click', toggleFS);
+
+  // 3) Keep label correct when user presses Esc
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? 'Exit fullscreen' : 'Fullscreen';
+  }); // [web:542]
+})();
+/* ===== DROP-IN: Back/Exit button + action ===== */
+(() => {
+  const controls = document.querySelector('.controls');
+  if (!controls) return;
+
+  // Add Exit button at the start of the controls row
+  controls.insertAdjacentHTML(
+    'afterbegin',
+    `<button class="btn" id="exitBtn" type="button">Exit</button>`
+  );
+
+  document.getElementById('exitBtn').addEventListener('click', () => {
+    history.back(); // goes to previous page in session history [web:564][web:570]
+  });
+})();
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkillSwap — Teach Inbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#9F87C3;
+      --glass:rgba(31,27,46,0.72);
+      --stroke:rgba(255,255,255,0.16);
+      --text:rgba(255,255,255,0.92);
+      --muted:rgba(255,255,255,0.72);
+      --muted-2:rgba(255,255,255,0.60);
+      --shadow-soft:0 10px 30px rgba(0,0,0,0.12);
+      --radius-xl:22px;
+      --radius-lg:18px;
+      --max:980px;
+      --focusRing:0 0 0 3px rgba(255,255,255,0.22), 0 0 0 1px rgba(31,27,46,0.35) inset;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:"Onest",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.35;
+    }
+    html,body{overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-ms-overflow-style:none;}
+    body::-webkit-scrollbar{display:none;}
+    .wrap{max-width:var(--max);margin:0 auto;padding:18px 18px 56px;}
+    .topbar{
+      position:sticky;top:0;z-index:30;
+      padding:18px 28px;
+      background:linear-gradient(to bottom, rgba(159,135,195,0.92), rgba(159,135,195,0.68), rgba(159,135,195,0));
+      backdrop-filter:blur(10px);
+    }
+    @media(max-width:720px){.topbar{padding:16px 16px;}}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brandName{font-weight:700;letter-spacing:0.14em;font-size:0.95rem;user-select:none;}
+    .btn{
+      appearance:none;border:1px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.12);color:var(--text);
+      border-radius:14px;padding:10px 12px;cursor:pointer;
+      transition:transform 140ms ease, background 140ms ease;
+      font-weight:600;letter-spacing:0.2px;text-decoration:none;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      white-space:nowrap;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,0.14);text-decoration:none;}
+    .btn:active{transform:translateY(0);}
+    .btn:focus-visible{outline:none;box-shadow:var(--focusRing);}
+    .btn.primary{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.22);}
+    .btn.ghost{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.14);}
+    .btn.danger{background:rgba(255, 80, 80, 0.18);border-color:rgba(255, 120, 120, 0.22);}
+
+    .card{border-radius:var(--radius-xl);background:var(--glass);border:1px solid var(--stroke);box-shadow:var(--shadow-soft);overflow:hidden;}
+    .cardHeader{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.10);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .cardHeader .h{margin:0;font-weight:650;letter-spacing:0.2px;font-size:1.02rem;}
+    .cardBody{padding:14px 16px 16px;}
+    .muted2{color:var(--muted-2);}
+    .hr{height:1px;background:rgba(255,255,255,0.10);margin:12px 0;}
+    .item{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;}
+    .row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;}
+    .title{font-weight:650;letter-spacing:0.2px;}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:0.92rem;color:rgba(255,255,255,0.86);}
+    .note{border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);padding:12px;color:rgba(255,255,255,0.90);font-size:0.92rem;}
+  
+  
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="header">
+      <div class="brandName">SKILLSWAP</div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a class="btn ghost" href="learn-request.html">Back to Learn</a>
+        <a class="btn ghost" href="home.html">Home</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="cardHeader">
+        <div>
+          <h1 class="h" style="font-size:1.18rem;">Teach: inbox</h1>
+          <div class="muted2" style="font-size:0.92rem;">Accept a request, complete session, earn credits.</div>
+        </div>
+        <div class="note" style="padding:10px 12px;">
+          Credits balance: <span id="balText" class="mono">—</span>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <div class="note">
+          MVP credits: completing a teach session gives +5 credits (same currency used for Priority reviews). [file:61]
+        </div>
+
+        <div class="hr"></div>
+
+        <div id="list" style="display:grid; gap:12px;"></div>
+
+        <div class="hr"></div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn ghost" id="refreshBtn" type="button">Refresh</button>
+          <button class="btn danger" id="wipeBtn" type="button">Wipe all requests (dev)</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const KEY_REQS = 'ss_learn_requests';
+    const KEY_BAL = 'ss_credits_balance';
+    const KEY_LEDGER = 'ss_credits_ledger';
+
+    const EARN_TEACH = 5;
+
+    function nowStamp(){
+      const d = new Date();
+      const pad2 = (x) => String(x).padStart(2,'0');
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    }
+
+    function loadReqs(){
+      const raw = localStorage.getItem(KEY_REQS);
+      if (!raw) return [];
+      try{
+        const arr = JSON.parse(raw); // JSON parse for arrays [web:322]
+        return Array.isArray(arr) ? arr : [];
+      }catch(e){ return []; }
+    }
+
+    function saveReqs(arr){
+      localStorage.setItem(KEY_REQS, JSON.stringify(arr)); // JSON stringify for arrays [web:322]
+    }
+
+    function loadBal(){
+      const v = localStorage.getItem(KEY_BAL);
+      return Number(v || '20');
+    }
+
+    function saveBal(n){
+      localStorage.setItem(KEY_BAL, String(n));
+    }
+
+    function loadLedger(){
+      const raw = localStorage.getItem(KEY_LEDGER);
+      if (!raw) return [];
+      try{
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      }catch(e){ return []; }
+    }
+
+    function saveLedger(arr){
+      localStorage.setItem(KEY_LEDGER, JSON.stringify(arr));
+    }
+
+    function ensureCreditsInit(){
+      if (!localStorage.getItem(KEY_BAL)){
+        saveBal(20);
+        saveLedger([{ t: nowStamp(), type:'init', delta:+20, label:'Starting credits' }]);
+      }
+    }
+
+    function renderBal(){
+      document.getElementById('balText').textContent = String(loadBal());
+    }
+
+    function acceptRequest(id){
+      const reqs = loadReqs();
+      const r = reqs.find(x => x.id === id);
+      if (!r) return;
+      if (r.status !== 'pending') return;
+      r.status = 'accepted';
+      r.acceptedAt = nowStamp();
+      saveReqs(reqs);
+      render();
+    }
+
+    function completeRequest(id){
+      const reqs = loadReqs();
+      const r = reqs.find(x => x.id === id);
+      if (!r) return;
+      if (r.status !== 'accepted') return;
+
+      r.status = 'completed';
+      r.completedAt = nowStamp();
+      saveReqs(reqs);
+
+      // Earn credits for teach completion [file:61]
+      ensureCreditsInit();
+      const bal = loadBal();
+      saveBal(bal + EARN_TEACH);
+
+      const ledger = loadLedger();
+      ledger.push({ t: nowStamp(), type:'earn', delta:+EARN_TEACH, label:'Earned from teach session' });
+      saveLedger(ledger);
+
+      alert(`Session completed. Earned +${EARN_TEACH} credits.`);
+      renderBal();
+      render();
+    }
+
+    function render(){
+      ensureCreditsInit();
+      renderBal();
+
+      const list = document.getElementById('list');
+      const reqs = loadReqs().slice().reverse();
+
+      if (reqs.length === 0){
+        list.innerHTML = `<div class="muted2">No requests yet. Go to Learn and post one.</div>`;
+        return;
+      }
+
+      list.innerHTML = '';
+      reqs.forEach(r => {
+        const el = document.createElement('div');
+        el.className = 'item';
+
+        const canAccept = r.status === 'pending';
+        const canComplete = r.status === 'accepted';
+
+        el.innerHTML = `
+          <div class="row">
+            <div>
+              <div class="title">${r.skill}</div>
+              <div class="muted2" style="margin-top:6px;">Level: ${r.level} • Duration: ${r.duration} min</div>
+              <div class="muted2" style="margin-top:8px;">${r.note}</div>
+              <div class="muted2" style="margin-top:10px;">Status: <span class="mono">${r.status}</span></div>
+            </div>
+            <div class="mono">${r.id}</div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn primary" data-act="accept" data-id="${r.id}" ${canAccept ? '' : 'disabled'}>Accept request</button>
+            <button class="btn ghost" data-act="complete" data-id="${r.id}" ${canComplete ? '' : 'disabled'}>Mark completed</button>
+          </div>
+
+          <div class="muted2" style="font-size:0.92rem; margin-top:10px;">
+            Created: ${r.createdAt || '—'} • Accepted: ${r.acceptedAt || '—'} • Completed: ${r.completedAt || '—'}
+          </div>
+        `;
+
+        list.appendChild(el);
+      });
+    }
+
+    document.getElementById('list').addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const act = btn.getAttribute('data-act');
+      const id = btn.getAttribute('data-id');
+      if (!act || !id) return;
+
+      if (act === 'accept') acceptRequest(id);
+      if (act === 'complete') completeRequest(id);
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', render);
+    document.getElementById('wipeBtn').addEventListener('click', () => {
+      localStorage.removeItem(KEY_REQS);
+      render();
+      alert('All requests wiped (dev).');
+    });
+/* ===== QUICK PATCH: inject Start session button (paste at bottom) ===== */
+(function () {
+  // 1) Add a Start Session button after every "Mark completed" button
+  function injectStartButtons() {
+    document.querySelectorAll('button[data-act="complete"]').forEach((completeBtn) => {
+      const id = completeBtn.getAttribute('data-id');
+      if (!id) return;
+
+      // already injected?
+      if (completeBtn.parentElement.querySelector(`button[data-act="start"][data-id="${id}"]`)) return;
+
+      // Only show when complete is enabled (means status === 'accepted' in your logic)
+      if (completeBtn.disabled) return;
+
+      completeBtn.insertAdjacentHTML(
+        'beforebegin',
+        `<button class="btn primary" data-act="start" data-id="${id}" type="button">Start session</button>`
+      );
+    });
+  }
+
+  // 2) Handle clicks (your existing delegate will ignore unknown acts unless you added it)
+  // So we add our own small delegate for the start button.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-act="start"]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-id');
+    if (!id) return;
+    window.location.href = `session-room.html?reqId=${encodeURIComponent(id)}`;
+  });
+
+  // Run once now and also every time the list changes (after render)
+  const origRender = window.render;
+  if (typeof origRender === 'function') {
+    window.render = function () {
+      origRender();
+      injectStartButtons();
+    };
+  } else {
+    // fallback: try immediately
+    injectStartButtons();
+  }
+})();
+
+
+    render();
+  </script>
+  
+</body>
+</html>

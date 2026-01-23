@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkillSwap — Teachers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#9F87C3;--glass:rgba(31,27,46,.72);--stroke:rgba(255,255,255,.16);--text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.72);--shadow:0 20px 60px rgba(0,0,0,.18);--radius:22px;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Onest",system-ui;background:var(--bg);color:var(--text);overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;}
+    body::-webkit-scrollbar{display:none;}
+    .wrap{max-width:1080px;margin:0 auto;padding:22px 18px 60px;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brand{font-weight:700;letter-spacing:.2px}
+    .tabs{display:flex;gap:10px;flex-wrap:wrap}
+    .tab{padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(31,27,46,.20);color:var(--text);text-decoration:none;}
+    .tab:hover{background:rgba(31,27,46,.26)}
+    .card{margin-top:14px;background:var(--glass);border:1px solid var(--stroke);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+    .cardHead{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.10)}
+    .cardHead h1{margin:0;font-size:1.1rem}
+    .cardHead p{margin:6px 0 0;color:var(--muted)}
+    .list{padding:14px 16px;display:grid;gap:10px;}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);}
+    .left{display:flex;flex-direction:column;gap:4px}
+    .name{font-weight:650}
+    .meta{color:var(--muted);font-size:.95rem}
+    .stars{font-weight:750}
+    .tag{display:inline-flex;align-items:center;gap:8px;font-size:.9rem;color:rgba(255,255,255,.86)}
+    .dot{width:8px;height:8px;border-radius:50%;background:rgba(144,238,144,.95)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">SkillSwap</div>
+      <div class="tabs">
+        <a class="tab" href="projects.html">Projects</a>
+        <a class="tab" href="teachers.html">Teachers</a>
+        <a class="tab" href="employers.html">Employers list</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardHead">
+        <h1>Teachers</h1>
+        <p>Teaching contributions (dummy data). Each session taught = ⭐ 1.</p>
+      </div>
+
+      <div class="list">
+        <div class="row">
+          <div class="left">
+            <div class="name">Aman • Web Dev</div>
+            <div class="meta">Sessions taught: 7</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 7</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Neha • UI/UX</div>
+            <div class="meta">Sessions taught: 5</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 5</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Karthik • React</div>
+            <div class="meta">Sessions taught: 4</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 4</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Priya • Product Design</div>
+            <div class="meta">Sessions taught: 3</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 3</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Rohit • DSA</div>
+            <div class="meta">Sessions taught: 3</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 3</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Sanya • Frontend</div>
+            <div class="meta">Sessions taught: 2</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 2</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Ananya • Figma</div>
+            <div class="meta">Sessions taught: 2</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 2</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Vaibhav • Node.js</div>
+            <div class="meta">Sessions taught: 1</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 1</div>
+        </div>
+
+        <div class="row">
+          <div class="left">
+            <div class="name">Nishant • Accessibility</div>
+            <div class="meta">Sessions taught: 1</div>
+            <div class="tag"><span class="dot"></span> Available today</div>
+          </div>
+          <div class="stars">⭐ 1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
